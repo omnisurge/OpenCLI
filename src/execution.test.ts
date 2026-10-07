@@ -809,6 +809,124 @@ describe('executeCommand — non-browser timeout', () => {
   });
 });
 
+describe('executeCommand — non-browser trace', () => {
+  function nonBrowserCmd(name: string, func: () => Promise<unknown>): CliCommand {
+    return cli({
+      site: 'test-execution',
+      name, access: 'read',
+      description: 'test non-browser trace',
+      browser: false,
+      strategy: Strategy.PUBLIC,
+      func,
+    });
+  }
+
+  function tracesRoot(baseDir: string): string {
+    return path.join(baseDir, 'profiles', 'default', 'traces');
+  }
+
+  it('exports a trace artifact for browser-less command failure when requested', async () => {
+    const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'opencli-exec-nbtrace-'));
+    const prevConfigDir = process.env.OPENCLI_CONFIG_DIR;
+    process.env.OPENCLI_CONFIG_DIR = baseDir;
+    const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+
+    try {
+      const cmd = nonBrowserCmd('non-browser-trace-failure', async () => {
+        throw new Error('adapter failure without browser');
+      });
+
+      const thrown = await executeCommand(cmd, {}, false, { trace: 'retain-on-failure' }).catch((err) => err);
+      expect((thrown as Error).message).toContain('adapter failure without browser');
+
+      const root = tracesRoot(baseDir);
+      expect(fs.existsSync(root)).toBe(true);
+      const traceId = fs.readdirSync(root)[0];
+      const traceDir = path.join(root, traceId);
+      expect(fs.existsSync(path.join(traceDir, 'trace.jsonl'))).toBe(true);
+
+      const receipt = JSON.parse(fs.readFileSync(path.join(traceDir, 'receipt.json'), 'utf-8'));
+      expect(receipt.status).toBe('failure');
+      expect(receipt.scope).toMatchObject({
+        session: 'direct',
+        site: 'test-execution',
+        command: 'test-execution/non-browser-trace-failure',
+      });
+      expect(receipt.error?.message).toContain('adapter failure without browser');
+
+      const trace = fs.readFileSync(path.join(traceDir, 'trace.jsonl'), 'utf-8');
+      expect(trace).toContain('adapter failure without browser');
+
+      // The receipt must reach the CLI error envelope, otherwise the artifact
+      // path is invisible to the caller (the whole point of the flag).
+      expect(toEnvelope(thrown).trace).toMatchObject({
+        traceId,
+        dir: traceDir,
+        status: 'failure',
+      });
+    } finally {
+      if (prevConfigDir === undefined) delete process.env.OPENCLI_CONFIG_DIR;
+      else process.env.OPENCLI_CONFIG_DIR = prevConfigDir;
+      stderrSpy.mockRestore();
+      fs.rmSync(baseDir, { recursive: true, force: true });
+      vi.restoreAllMocks();
+    }
+  });
+
+  it('exports a trace artifact for browser-less command success when trace is on', async () => {
+    const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'opencli-exec-nbtrace-ok-'));
+    const prevConfigDir = process.env.OPENCLI_CONFIG_DIR;
+    process.env.OPENCLI_CONFIG_DIR = baseDir;
+    const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const onTraceExport = vi.fn();
+
+    try {
+      const cmd = nonBrowserCmd('non-browser-trace-success', async () => [{ ok: true }]);
+      await expect(executeCommand(cmd, {}, false, { trace: 'on', onTraceExport })).resolves.toEqual([{ ok: true }]);
+
+      expect(stderrSpy.mock.calls.flat().join('\n')).toContain('OpenCLI trace artifact:');
+      const root = tracesRoot(baseDir);
+      const traceId = fs.readdirSync(root)[0];
+      const receipt = JSON.parse(fs.readFileSync(path.join(root, traceId, 'receipt.json'), 'utf-8'));
+      expect(receipt.status).toBe('success');
+      expect(receipt.error).toBeUndefined();
+      expect(onTraceExport).toHaveBeenCalledWith(expect.objectContaining({ traceId }));
+    } finally {
+      if (prevConfigDir === undefined) delete process.env.OPENCLI_CONFIG_DIR;
+      else process.env.OPENCLI_CONFIG_DIR = prevConfigDir;
+      stderrSpy.mockRestore();
+      fs.rmSync(baseDir, { recursive: true, force: true });
+      vi.restoreAllMocks();
+    }
+  });
+
+  it('keeps no artifact for browser-less commands when trace is off or the run succeeds under retain-on-failure', async () => {
+    const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'opencli-exec-nbtrace-off-'));
+    const prevConfigDir = process.env.OPENCLI_CONFIG_DIR;
+    process.env.OPENCLI_CONFIG_DIR = baseDir;
+    const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+
+    try {
+      // off + failure
+      await expect(
+        executeCommand(nonBrowserCmd('non-browser-trace-off', async () => { throw new Error('boom'); }), {}, false, { trace: 'off' }),
+      ).rejects.toThrow('boom');
+      // retain-on-failure + success
+      await expect(
+        executeCommand(nonBrowserCmd('non-browser-trace-retain-ok', async () => [{ ok: true }]), {}, false, { trace: 'retain-on-failure' }),
+      ).resolves.toEqual([{ ok: true }]);
+
+      expect(fs.existsSync(tracesRoot(baseDir))).toBe(false);
+    } finally {
+      if (prevConfigDir === undefined) delete process.env.OPENCLI_CONFIG_DIR;
+      else process.env.OPENCLI_CONFIG_DIR = prevConfigDir;
+      stderrSpy.mockRestore();
+      fs.rmSync(baseDir, { recursive: true, force: true });
+      vi.restoreAllMocks();
+    }
+  });
+});
+
 describe('executeCommand — persistent write lease release', () => {
   function persistentWriteCmd(func: () => Promise<unknown>): CliCommand {
     return cli({

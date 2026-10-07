@@ -470,15 +470,64 @@ export async function executeCommand(
       // a `--timeout` arg (and the resolved value is positive). Without that
       // arg there is no meaningful default — non-browser cmds are diverse
       // enough that a hard cap would do more harm than good.
-      if (userTimeoutSec !== null) {
+      const runNonBrowser = (): Promise<unknown> => {
+        if (userTimeoutSec === null) return runCommand(cmd, null, kwargs, debug);
         const ceiling = userTimeoutSec + RUNTIME_TIMEOUT_PADDING_SECONDS;
-        result = await runWithTimeout(runCommand(cmd, null, kwargs, debug), {
+        return runWithTimeout(runCommand(cmd, null, kwargs, debug), {
           timeout: ceiling,
           label: fullName(cmd),
           hint: `Pass a higher --timeout value (currently ${userTimeoutSec}s)`,
         });
+      };
+
+      if (traceMode === 'off') {
+        result = await runNonBrowser();
       } else {
-        result = await runCommand(cmd, null, kwargs, debug);
+        // `--trace` must not be a silent no-op for browser-less commands: they
+        // are the majority of local/public adapters, and before this branch
+        // existed the flag was accepted, produced no artifact, and on failure
+        // also suppressed the AutoFix hint — leaving nothing to debug with.
+        // ObservationSession is page-independent, so the same artifact shape is
+        // available; browser-only evidence (snapshot / network / screenshot)
+        // simply does not apply, and is not fabricated.
+        const observation = new ObservationSession({
+          scope: {
+            session: 'direct',
+            site: cmd.site,
+            command: fullName(cmd),
+            adapterSourcePath: resolveAdapterSourcePath(cmd as InternalCliCommand),
+          },
+        });
+        observation.record({
+          stream: 'action',
+          name: 'command',
+          phase: 'start',
+          data: { args: kwargs },
+        });
+        try {
+          result = await runNonBrowser();
+          observation.record({ stream: 'action', name: 'command', phase: 'end' });
+          if (traceMode === 'on') {
+            exportTraceArtifact(observation, 'success', undefined, opts.onTraceExport);
+          }
+        } catch (err) {
+          const failure = err as { code?: string; hint?: string } | undefined;
+          observation.record({
+            stream: 'action',
+            name: 'command',
+            phase: 'error',
+            data: { error: err instanceof Error ? err.message : String(err) },
+          });
+          observation.record({
+            stream: 'error',
+            message: err instanceof Error ? err.message : String(err),
+            stack: err instanceof Error ? err.stack : undefined,
+            code: failure?.code,
+            hint: failure?.hint,
+          });
+          exportTraceArtifact(observation, 'failure', err, opts.onTraceExport);
+          throw err;
+        }
       }
     }
   } catch (err) {
