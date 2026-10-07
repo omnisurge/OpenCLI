@@ -1,6 +1,13 @@
 {
   "name": "@jackwener/opencli",
-  "version": "1.8.8",
+  "version": "1.8.8-omnisurge.1",
+  "private": true,
+  "opencliFork": {
+    "distribution": "omnisurge",
+    "upstreamVersion": "1.8.8",
+    "upstreamCommit": "24136945847afbfad266c6c46a8cd335377f9112",
+    "patches": ["non-browser-trace"]
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -77,7 +84,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jackwener/opencli.git"
+    "url": "git+https://github.com/omnisurge/OpenCLI.git"
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",

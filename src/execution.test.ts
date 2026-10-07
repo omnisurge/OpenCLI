@@ -873,6 +873,41 @@ describe('executeCommand — non-browser trace', () => {
     }
   });
 
+  it('redacts sensitive arguments and error evidence from browser-less trace files', async () => {
+    const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'opencli-exec-nbtrace-redact-'));
+    const prevConfigDir = process.env.OPENCLI_CONFIG_DIR;
+    process.env.OPENCLI_CONFIG_DIR = baseDir;
+    const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    try {
+      const cmd = nonBrowserCmd('non-browser-trace-redaction', async () => {
+        throw new Error('adapter failure password=SYNTHETIC-ERROR-PASSWORD');
+      });
+      const args = {
+        sword_token: 'SYNTHETIC-GRANT-TOKEN',
+        password: 'SYNTHETIC-ARG-PASSWORD',
+        nested: { authorization: 'Bearer SYNTHETIC-AUTHORIZATION' },
+      };
+      await expect(executeCommand(cmd, args, false, {
+        prepared: true, trace: 'retain-on-failure',
+      })).rejects.toThrow('adapter failure');
+      const root = tracesRoot(baseDir);
+      const traceDir = path.join(root, fs.readdirSync(root)[0]);
+      const files = ['trace.jsonl', 'receipt.json', 'summary.md', 'console.jsonl', 'network.jsonl'];
+      const evidence = files.map((file) => fs.readFileSync(path.join(traceDir, file), 'utf-8')).join('\n');
+      for (const secret of [args.sword_token, args.password, 'SYNTHETIC-AUTHORIZATION', 'SYNTHETIC-ERROR-PASSWORD']) {
+        expect(evidence).not.toContain(secret);
+      }
+      expect(evidence).toContain('[REDACTED]');
+      expect(evidence).toContain('adapter failure');
+    } finally {
+      if (prevConfigDir === undefined) delete process.env.OPENCLI_CONFIG_DIR;
+      else process.env.OPENCLI_CONFIG_DIR = prevConfigDir;
+      stderrSpy.mockRestore();
+      fs.rmSync(baseDir, { recursive: true, force: true });
+      vi.restoreAllMocks();
+    }
+  });
+
   it('exports a trace artifact for browser-less command success when trace is on', async () => {
     const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'opencli-exec-nbtrace-ok-'));
     const prevConfigDir = process.env.OPENCLI_CONFIG_DIR;
