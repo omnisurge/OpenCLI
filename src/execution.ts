@@ -32,11 +32,12 @@ import { getBrowserFactory, browserSession, runWithTimeout, DEFAULT_BROWSER_COMM
 import { profileRouteParams, resolveProfileSelection } from './browser/profile.js';
 import { clearDaemonRunContext, generateRunId, isUnknownOutcomeError, releaseSiteSessionLease, setDaemonCommandTimeoutSeconds, setDaemonRunContext } from './browser/daemon-client.js';
 import { emitHook, type HookContext } from './hooks.js';
-import { log } from './logger.js';
 import { isElectronApp } from './electron-apps.js';
 import { probeCDP, resolveElectronEndpoint } from './launcher.js';
 import { ObservationSession, exportObservationSession, type ObservationExportResult, type ObservationExportStatus } from './observation/index.js';
 import { resolveAdapterSourcePath } from './adapter-source.js';
+import { projectPublicError } from './public-error.js';
+import { warnTrace } from './observation/diagnostics.js';
 
 const _loadedModules = new Map<string, Promise<void>>();
 /** Track mtime of loaded user adapter files for hot-reload in daemon mode. */
@@ -352,15 +353,10 @@ export async function executeCommand(
             // unknown outcome while still running against the persistent tab.
             wrapped.cause = err;
             if (observation && (traceMode === 'on' || traceMode === 'retain-on-failure')) {
-              observation.record({
-                stream: 'error',
-                message: wrapped.message,
-                stack: wrapped.stack,
-                code: wrapped.code,
-                hint: wrapped.hint,
-              });
+              observation.record({ stream: 'error', ...projectPublicError(wrapped, { verbose: true }) });
               await collectObservationEvidence(observation, page).catch(() => {});
-              exportTraceArtifact(observation, 'failure', wrapped, opts.onTraceExport);
+              const trace = exportTraceArtifact(observation, 'failure', wrapped, opts.onTraceExport);
+              if (trace) attachTraceReceipt(wrapped, trace.receipt);
             }
             throw wrapped;
           }
@@ -396,6 +392,7 @@ export async function executeCommand(
           if (!keepTab) await page.closeWindow?.().catch(() => {});
           return result;
         } catch (err) {
+          let failure = err;
           if (!commandSettled) adapterStillRunning = true;
           if (observation) {
             observation.record({
@@ -404,21 +401,18 @@ export async function executeCommand(
               phase: 'error',
               data: { error: err instanceof Error ? err.message : String(err) },
             });
-            observation.record({
-              stream: 'error',
-              message: err instanceof Error ? err.message : String(err),
-              stack: err instanceof Error ? err.stack : undefined,
-            });
+            observation.record({ stream: 'error', ...projectPublicError(err, { verbose: true }) });
             if (traceMode === 'on' || traceMode === 'retain-on-failure') {
               await collectObservationEvidence(observation, page).catch(() => {});
-              exportTraceArtifact(observation, 'failure', err, opts.onTraceExport);
+              const trace = exportTraceArtifact(observation, 'failure', err, opts.onTraceExport);
+              if (trace) failure = attachTraceReceipt(err, trace.receipt);
             }
           }
           // Release the tab lease on failure too — without this, the lease lingers
           // until the extension's idle timer fires (unreliable on Windows where
           // MV3 service workers may be suspended before setTimeout triggers).
           if (!keepTab) await page.closeWindow?.().catch(() => {});
-          throw err;
+          throw failure;
         }
       }, { session, cdpEndpoint, ...profileRouting, windowMode, surface: 'adapter', siteSession });
       } catch (err) {
@@ -511,22 +505,16 @@ export async function executeCommand(
             exportTraceArtifact(observation, 'success', undefined, opts.onTraceExport);
           }
         } catch (err) {
-          const failure = err as { code?: string; hint?: string } | undefined;
+          const publicError = projectPublicError(err, { verbose: true });
           observation.record({
             stream: 'action',
             name: 'command',
             phase: 'error',
             data: { error: err instanceof Error ? err.message : String(err) },
           });
-          observation.record({
-            stream: 'error',
-            message: err instanceof Error ? err.message : String(err),
-            stack: err instanceof Error ? err.stack : undefined,
-            code: failure?.code,
-            hint: failure?.hint,
-          });
-          exportTraceArtifact(observation, 'failure', err, opts.onTraceExport);
-          throw err;
+          observation.record({ stream: 'error', ...publicError });
+          const trace = exportTraceArtifact(observation, 'failure', err, opts.onTraceExport);
+          throw trace ? attachTraceReceipt(err, trace.receipt) : err;
         }
       }
     }
@@ -597,19 +585,17 @@ function exportTraceArtifact(
 ): ObservationExportResult | undefined {
   try {
     const trace = exportObservationSession(session, { error, status });
-    if (status === 'failure' && error !== undefined) {
-      attachTraceReceipt(error, trace.receipt);
-    } else {
+    if (status === 'success') {
       process.stderr.write(`OpenCLI trace artifact: ${trace.dir}\n`);
     }
     try {
       onTraceExport?.(trace);
     } catch (err) {
-      log.warn(`[trace] Trace export callback failed: ${err instanceof Error ? err.message : String(err)}`);
+      warnTrace('Trace export callback failed', err);
     }
     return trace;
   } catch (err) {
-    log.warn(`[trace] Failed to export trace artifact: ${err instanceof Error ? err.message : String(err)}`);
+    warnTrace('Failed to export trace artifact', err);
     return undefined;
   }
 }

@@ -78,7 +78,7 @@ export async function emitHook(name: HookName, ctx: HookContext, result?: unknow
     try {
       await fn(ctx, result);
     } catch (err) {
-      log.warn(`Hook ${name} handler failed: ${err instanceof Error ? err.message : String(err)}`);
+      log.warn(`Hook ${name} handler failed`, err);
     }
   }
 }

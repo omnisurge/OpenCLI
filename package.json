@@ -1,12 +1,12 @@
 {
   "name": "@jackwener/opencli",
-  "version": "1.8.8-omnisurge.1",
+  "version": "1.8.8-omnisurge.2",
   "private": true,
   "opencliFork": {
     "distribution": "omnisurge",
     "upstreamVersion": "1.8.8",
     "upstreamCommit": "24136945847afbfad266c6c46a8cd335377f9112",
-    "patches": ["non-browser-trace"]
+    "patches": ["non-browser-trace", "public-error-output-redaction", "immutable-error-trace-receipts", "framework-diagnostics-redaction"]
   },
   "publishConfig": {
     "access": "public"

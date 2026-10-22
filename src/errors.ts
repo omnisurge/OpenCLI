@@ -20,6 +20,7 @@
  * 130   Interrupted by Ctrl-C           (set by tui.ts SIGINT handler)
  */
 import type { ObservationTraceReceipt } from './observation/events.js';
+import { projectPublicError, type PublicErrorOptions } from './public-error.js';
 
 // ── Exit code table ──────────────────────────────────────────────────────────
 
@@ -57,24 +58,31 @@ export class CliError extends Error {
 }
 
 const TRACE_RECEIPT_SYMBOL = Symbol.for('opencli.traceReceipt');
+const traceReceipts = new WeakMap<object, ObservationTraceReceipt>();
 
-export function attachTraceReceipt(err: unknown, receipt: ObservationTraceReceipt): void {
-  if (!err || (typeof err !== 'object' && typeof err !== 'function')) return;
+/** Return the value to rethrow: only primitives need an identity-bearing wrapper. */
+export function attachTraceReceipt(err: unknown, receipt: ObservationTraceReceipt): unknown {
+  const target = err !== null && (typeof err === 'object' || typeof err === 'function')
+    ? err
+    : new Error(getErrorMessage(err), { cause: err });
+  // The side channel is authoritative for frozen/sealed errors. Do not key a global
+  // map by primitive value: independent failures with equal values must not alias.
+  traceReceipts.set(target, receipt);
   try {
-    Object.defineProperty(err, TRACE_RECEIPT_SYMBOL, {
-      value: receipt,
-      enumerable: false,
-      configurable: true,
+    Object.defineProperty(target, TRACE_RECEIPT_SYMBOL, {
+      value: receipt, enumerable: false, configurable: true,
     });
   } catch {
-    // Non-extensible thrown objects are rare; trace export should never mask the
-    // original adapter error just because metadata attachment failed.
+    // Symbol metadata is cross-package compatibility only; the WeakMap above
+    // already retained the receipt, so attachment failure loses no evidence.
   }
+  return target;
 }
 
 export function getTraceReceipt(err: unknown): ObservationTraceReceipt | undefined {
-  if (!err || (typeof err !== 'object' && typeof err !== 'function')) return undefined;
-  return (err as Record<PropertyKey, unknown>)[TRACE_RECEIPT_SYMBOL] as ObservationTraceReceipt | undefined;
+  if (err === null || (typeof err !== 'object' && typeof err !== 'function')) return undefined;
+  return traceReceipts.get(err)
+    ?? (err as Record<PropertyKey, unknown>)[TRACE_RECEIPT_SYMBOL] as ObservationTraceReceipt | undefined;
 }
 
 // ── Typed subclasses ─────────────────────────────────────────────────────────
@@ -235,20 +243,9 @@ export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-/** Serialize an error cause chain into a readable string. */
-function serializeCause(cause: unknown, depth: number = 0): string {
-  if (depth > 10) return '(cause chain truncated)';
-  if (cause instanceof Error) {
-    const parts = [cause.message];
-    if (cause.cause) parts.push(`  caused by: ${serializeCause(cause.cause, depth + 1)}`);
-    return parts.join('\n');
-  }
-  return String(cause);
-}
-
-/** Build an ErrorEnvelope from any caught value. */
-export function toEnvelope(err: unknown): ErrorEnvelope {
-  const cause = err instanceof Error && err.cause ? serializeCause(err.cause) : undefined;
+/** Build a safe public ErrorEnvelope from any caught value. */
+export function toEnvelope(err: unknown, opts: PublicErrorOptions = {}): ErrorEnvelope {
+  const { name: _name, hint, ...error } = projectPublicError(err, opts);
   const traceReceipt = getTraceReceipt(err);
   const trace = traceReceipt ? {
     traceId: traceReceipt.traceId,
@@ -257,45 +254,9 @@ export function toEnvelope(err: unknown): ErrorEnvelope {
     receiptPath: traceReceipt.receiptPath,
     status: traceReceipt.status,
   } : undefined;
-  // Duck typing: accept own CliError instances AND cross-package copies that
-  // carry the same shape. `instanceof` fails when the throwing module resolves
-  // a different copy of @jackwener/opencli (e.g. a plugin with its own
-  // node_modules) — those errors used to degrade to UNKNOWN and lose `hint`.
-  //
-  // `exitCode` is the discriminator: CliError's constructor always assigns it
-  // (defaulting to GENERIC_ERROR), while Node system errors carry a string
-  // `code` (ENOENT, ECONNREFUSED, EACCES) and a string `message` but never an
-  // `exitCode`. Without this check those would be reported with their errno as
-  // the envelope `code`, silently widening the contract that callers switch on.
-  const isCliErrorLike =
-    err !== null &&
-    typeof err === 'object' &&
-    typeof (err as any).code === 'string' &&
-    typeof (err as any).message === 'string' &&
-    typeof (err as any).exitCode === 'number';
-  if (err instanceof CliError || isCliErrorLike) {
-    const e = err as any;
-    return {
-      ok: false,
-      error: {
-        code: e.code,
-        message: e.message,
-        ...(typeof e.hint === 'string' && e.hint ? { help: e.hint } : {}),
-        exitCode: e.exitCode ?? EXIT_CODES.GENERIC_ERROR,
-        ...(cause ? { cause } : {}),
-      },
-      ...(trace ? { trace } : {}),
-    };
-  }
-  const msg = getErrorMessage(err);
   return {
     ok: false,
-    error: {
-      code: 'UNKNOWN',
-      message: msg,
-      exitCode: EXIT_CODES.GENERIC_ERROR,
-      ...(cause ? { cause } : {}),
-    },
+    error: { ...error, ...(hint ? { help: hint } : {}) },
     ...(trace ? { trace } : {}),
   };
 }

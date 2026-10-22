@@ -388,7 +388,7 @@ describe('commanderAdapter error envelope output', () => {
     stderrSpy.mockRestore();
   });
 
-  it('does not add an AutoFix rerun hint when trace is already enabled', async () => {
+  it('offers recovery when trace was requested but no receipt reached the caller', async () => {
     const program = new Command();
     const siteCmd = program.command('xiaohongshu');
     registerCommandToProgram(siteCmd, cmd);
@@ -408,7 +408,7 @@ describe('commanderAdapter error envelope output', () => {
 
     const output = stderrSpy.mock.calls.map(c => String(c[0])).join('');
     expect(output).toContain('code: SELECTOR');
-    expect(output).not.toContain('AutoFix: re-run');
+    expect(output).toContain('AutoFix: re-run');
 
     stderrSpy.mockRestore();
   });
@@ -448,6 +448,7 @@ describe('commanderAdapter error envelope output', () => {
     expect(output).toContain('dir: /tmp/opencli/profiles/default/traces/trace-1');
     expect(output).toContain('summaryPath: /tmp/opencli/profiles/default/traces/trace-1/summary.md');
     expect(output).toContain('receiptPath: /tmp/opencli/profiles/default/traces/trace-1/receipt.json');
+    expect(output).not.toContain('AutoFix: re-run');
 
     stderrSpy.mockRestore();
   });

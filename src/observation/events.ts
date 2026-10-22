@@ -63,6 +63,9 @@ export interface ErrorObservationEvent extends BaseObservationEvent {
   message: string;
   stack?: string;
   hint?: string;
+  cause?: string;
+  name?: string;
+  exitCode?: number;
 }
 
 export type ObservationEvent =
@@ -108,5 +111,6 @@ export interface ObservationTraceReceipt {
     message: string;
     hint?: string;
     exitCode?: number;
+    cause?: string;
   };
 }

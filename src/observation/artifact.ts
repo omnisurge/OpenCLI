@@ -5,8 +5,8 @@ import type { ObservationEvent, ObservationExportResult, ObservationExportStatus
 import { ObservationSession } from './session.js';
 import { redactValue } from './redaction.js';
 import { pruneTraceArtifacts, traceExpiresAt, type TraceRetentionPolicyInput } from './retention.js';
-import { CliError, getErrorMessage } from '../errors.js';
-import { log } from '../logger.js';
+import { projectPublicError } from '../public-error.js';
+import { warnTrace } from './diagnostics.js';
 import { PKG_VERSION } from '../version.js';
 
 export interface ExportObservationOptions {
@@ -102,7 +102,7 @@ export function buildTraceReceipt(
   error?: unknown,
   opts: { createdAt?: string; scope?: ObservationSession['scope']; retentionPolicy?: TraceRetentionPolicyInput } = {},
 ): ObservationTraceReceipt {
-  const maybeCliError = error instanceof CliError ? error : undefined;
+  const publicError = projectPublicError(error);
   const createdAt = opts.createdAt ?? new Date().toISOString();
   return {
     schemaVersion: 1,
@@ -115,12 +115,8 @@ export function buildTraceReceipt(
     createdAt,
     expiresAt: traceExpiresAt(createdAt, opts.retentionPolicy),
     ...(opts.scope ? { scope: opts.scope } : {}),
-    ...(error === undefined ? {} : {
-      error: {
-        ...(error instanceof Error ? { name: error.name } : {}),
-        ...(maybeCliError ? { code: maybeCliError.code, hint: maybeCliError.hint, exitCode: maybeCliError.exitCode } : {}),
-        message: String(redactValue(getErrorMessage(error))),
-      },
+    ...(status === 'success' && error === undefined ? {} : {
+      error: publicError,
     }),
   };
 }
@@ -134,10 +130,10 @@ function pruneTraceArtifactsBestEffort(
     pruneTraceArtifacts(tracesDir, {
       policy: retentionPolicy,
       protectedTraceDirs: [protectedTraceDir],
-      warn: (message) => log.warn(`[trace] ${message}`),
+      warn: (message) => warnTrace(message),
     });
   } catch (err) {
-    log.warn(`[trace] Failed to prune trace artifacts: ${err instanceof Error ? err.message : String(err)}`);
+    warnTrace('Failed to prune trace artifacts', err);
   }
 }
 
@@ -151,7 +147,8 @@ function renderSummary(
     return acc;
   }, {});
 
-  const error = serializeSummaryError(opts.error);
+  const error = opts.status === 'success' && opts.error === undefined
+    ? undefined : projectPublicError(opts.error);
   const errorEvents = events.filter((event) => event.stream === 'error').slice(-20).reverse();
   const failedNetwork = events
     .filter((event): event is Extract<ObservationEvent, { stream: 'network' }> => event.stream === 'network')
@@ -230,17 +227,6 @@ function renderSummary(
   return lines.join('\n');
 }
 
-function serializeSummaryError(error: unknown): { code?: string; message: string; hint?: string } | undefined {
-  if (error === undefined) return undefined;
-  if (error instanceof CliError) {
-    return {
-      code: error.code,
-      message: String(redactValue(error.message)),
-      ...(error.hint ? { hint: String(redactValue(error.hint)) } : {}),
-    };
-  }
-  return { message: String(redactValue(getErrorMessage(error))) };
-}
 
 function yamlScalar(value: string): string {
   return JSON.stringify(value);
