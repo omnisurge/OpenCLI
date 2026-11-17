@@ -32,9 +32,10 @@
 | [0002](0002-release-omnisurge-3.md) | 发布 1.8.8-omnisurge.3 交付 fork 更新提示修复 | Implemented |
 | [0003](0003-embedded-runtime-contract.md) | 嵌入式运行环境契约（OPENCLI_HOME / OPENCLI_EXTRA_CLIS_DIR / OPENCLI_EMBEDDED） | Implemented |
 | [0004](0004-embedded-host-delivery-contract.md) | 宿主内嵌 OpenCLI 运行时的交付与消费契约 | Proposed |
-| [0005](0005-product-naming-and-technical-identity.md) | 产品命名与技术标识（.4 不改名） | Proposed |
+| [0005](0005-product-naming-and-technical-identity.md) | 产品命名与技术标识（.4 不改名） | Superseded |
 | [0006](0006-release-omnisurge-4.md) | 发布 1.8.8-omnisurge.4 | Implemented |
+| [0007](0007-omni-cli-brand.md) | 采用 Omni CLI 品牌（powered by Omnisurge） | Accepted |
 
 ## 当前最大编号
 
-本仓当前最大编号是 `0006`。新增决策从 `0007` 开始。
+本仓当前最大编号是 `0007`。新增决策从 `0008` 开始。

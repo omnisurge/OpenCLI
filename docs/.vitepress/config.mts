@@ -208,6 +208,7 @@ export default defineConfig({
                 { text: 'ADR 0004 — Embedded host delivery contract', link: '/adr/0004-embedded-host-delivery-contract' },
                 { text: 'ADR 0005 — Product naming and technical identity', link: '/adr/0005-product-naming-and-technical-identity' },
                 { text: 'ADR 0006 — Release 1.8.8-omnisurge.4', link: '/adr/0006-release-omnisurge-4' },
+                { text: 'ADR 0007 — Omni CLI brand', link: '/adr/0007-omni-cli-brand' },
               ],
             },
           ],

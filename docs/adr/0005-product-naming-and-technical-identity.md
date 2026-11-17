@@ -1,6 +1,6 @@
 # ADR 0005：产品命名与技术标识（.4 不改名）
 
-- 状态：Proposed（2026-11-17，所有者提出 Surge CLI / Omni CLI 选项；待最终品牌确认）
+- 状态：Superseded（2026-11-17，所有者已选择 Omni CLI，品牌决定由 ADR 0007 接管；.4 不改名部分仍为历史）
 - 关联：AGENTS.md §1.1（分发身份硬约束）；ADR 0004（宿主消费契约）；supervision-assistant ADR 0048（payload 仍称 opencli-runtime）
 - 变更级别：C0（本 ADR 本身仅记录命名决定；若未来改技术标识则为 breaking C3，不在本批）
 
@@ -42,3 +42,4 @@
 ## 修订记录
 
 - 2026-11-17：Proposed；决定 .4 保持 OpenCLI，未来品牌候选 Omni CLI/Omnisurge CLI，不采用 Surge CLI；技术改名另立 breaking ADR。
+- 2026-11-17：所有者选择 Omni CLI（powered by Omnisurge），本 ADR 由 ADR 0007 取代；.4 冻结事实不变。
