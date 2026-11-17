@@ -6,7 +6,7 @@
     "distribution": "omnisurge",
     "upstreamVersion": "1.8.8",
     "upstreamCommit": "24136945847afbfad266c6c46a8cd335377f9112",
-    "patches": ["non-browser-trace", "public-error-output-redaction", "immutable-error-trace-receipts", "framework-diagnostics-redaction", "workflow-fork-guards"]
+    "patches": ["non-browser-trace", "public-error-output-redaction", "immutable-error-trace-receipts", "framework-diagnostics-redaction", "workflow-fork-guards", "fork-aware-update-notifier"]
   },
   "publishConfig": {
     "access": "public"

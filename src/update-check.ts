@@ -17,12 +17,13 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { PKG_VERSION } from './version.js';
+import { PKG_VERSION, PKG_DISTRIBUTION } from './version.js';
 
 const CACHE_DIR = path.join(os.homedir(), '.opencli');
 const CACHE_FILE = path.join(CACHE_DIR, 'update-check.json');
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24h
 const EXTENSION_STALE_MS = 7 * 24 * 60 * 60 * 1000; // 7d
+const IS_FORK_DISTRIBUTION = PKG_DISTRIBUTION !== undefined;
 const NPM_REGISTRY_URL = 'https://registry.npmjs.org/@jackwener/opencli/latest';
 const GITHUB_RELEASES_URL = 'https://api.github.com/repos/jackwener/OpenCLI/releases?per_page=20';
 
@@ -89,6 +90,8 @@ interface NoticeInputs {
   cliVersion: string;
   cache: UpdateCache | null;
   now: number;
+  /** Production passes the package stamp; tests must pass it explicitly. */
+  isForkDistribution: boolean;
 }
 
 interface NoticeLines {
@@ -97,8 +100,10 @@ interface NoticeLines {
 }
 
 /** Pure function: derive notice text from cache state. Exported for tests. */
-function buildUpdateNotices({ cliVersion, cache, now }: NoticeInputs): NoticeLines {
+function buildUpdateNotices({ cliVersion, cache, now, isForkDistribution }: NoticeInputs): NoticeLines {
   if (!cache) return {};
+  // A fork has no upstream npm/releases target; both notice lines would be wrong.
+  if (isForkDistribution) return {};
   const lines: NoticeLines = {};
   if (cache.latestVersion && isNewer(cache.latestVersion, cliVersion)) {
     lines.cli =
@@ -128,6 +133,7 @@ function buildUpdateNotices({ cliVersion, cache, now }: NoticeInputs): NoticeLin
  */
 export function registerUpdateNoticeOnExit(): void {
   if (isCI()) return;
+  if (process.env.OPENCLI_NO_UPDATE_NOTIFIER) return;
   if (process.argv.includes('--get-completions')) return;
 
   process.on('exit', (code) => {
@@ -136,6 +142,7 @@ export function registerUpdateNoticeOnExit(): void {
       cliVersion: PKG_VERSION,
       cache: _cache,
       now: Date.now(),
+      isForkDistribution: IS_FORK_DISTRIBUTION,
     });
     if (!cli && !extension) return;
     try {

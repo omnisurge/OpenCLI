@@ -16,10 +16,30 @@ if (!fs.existsSync(path.join(_pkgDir, 'package.json'))) {
 }
 const pkgJsonPath = path.join(_pkgDir, 'package.json');
 
-export const PKG_VERSION: string = (() => {
+interface PackageJsonShape {
+  version?: unknown;
+  opencliFork?: { distribution?: unknown };
+}
+
+const pkgJson: PackageJsonShape | null = (() => {
   try {
-    return JSON.parse(fs.readFileSync(pkgJsonPath, 'utf-8')).version;
+    return JSON.parse(fs.readFileSync(pkgJsonPath, 'utf-8')) as PackageJsonShape;
   } catch {
-    return '0.0.0';
+    return null;
   }
 })();
+
+export const PKG_VERSION: string =
+  typeof pkgJson?.version === 'string' ? pkgJson.version : '0.0.0';
+
+/** Parse a declared distribution identity; missing/invalid stamps fail open to upstream. */
+export function parseDistribution(pkg: unknown): string | undefined {
+  if (!pkg || typeof pkg !== 'object') return undefined;
+  const opencliFork = (pkg as { opencliFork?: unknown }).opencliFork;
+  if (!opencliFork || typeof opencliFork !== 'object') return undefined;
+  const distribution = (opencliFork as { distribution?: unknown }).distribution;
+  return typeof distribution === 'string' && distribution.trim() ? distribution.trim() : undefined;
+}
+
+/** Declared distribution identity from package.json; absent for upstream builds. */
+export const PKG_DISTRIBUTION: string | undefined = parseDistribution(pkgJson);
