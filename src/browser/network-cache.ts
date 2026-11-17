@@ -11,9 +11,9 @@
  */
 
 import * as fs from 'node:fs';
-import * as os from 'node:os';
 import * as path from 'node:path';
 import type { SafeNetworkRequest } from './network-request.js';
+import { opencliRoot } from '../embedded-runtime.js';
 
 export const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -45,7 +45,7 @@ export interface NetworkCacheFile {
 }
 
 function getDefaultCacheDir(): string {
-    return process.env.OPENCLI_CACHE_DIR || path.join(os.homedir(), '.opencli', 'cache');
+    return process.env.OPENCLI_CACHE_DIR || path.join(opencliRoot(), 'cache');
 }
 
 export function getCachePath(session: string, baseDir: string = getDefaultCacheDir()): string {

@@ -13,7 +13,6 @@ if (process.platform !== 'win32') {
 }
 
 import * as fs from 'node:fs';
-import * as os from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getCompletionsFromManifest, hasAllManifests, printCompletionScriptFast } from './completion-fast.js';
@@ -22,12 +21,13 @@ import { PKG_VERSION } from './version.js';
 import { EXIT_CODES } from './errors.js';
 import { isSupportedNodeVersion, MIN_SUPPORTED_NODE_MAJOR } from './runtime-detect.js';
 import { isIgnorableDaemonPortEnv, unsupportedDaemonPortEnvMessage } from './constants.js';
+import { isEmbeddedRuntime, opencliRoot } from './embedded-runtime.js';
 
 const __filename = fileURLToPath(import.meta.url);
 // Adapters are JS-first and live at <package-root>/clis/.
 // Use findPackageRoot so the path works both in dev (src/main.ts) and prod (dist/src/main.js).
 const BUILTIN_CLIS = path.join(findPackageRoot(__filename), 'clis');
-const USER_CLIS = path.join(os.homedir(), '.opencli', 'clis');
+const USER_CLIS = path.join(opencliRoot(), 'clis');
 
 // ── Ultra-fast path: lightweight commands bypass full discovery ──────────
 // These are high-frequency or trivial paths that must not pay the startup tax.
@@ -97,7 +97,7 @@ if (getCompIdx !== -1) {
 
 // ── Full startup path ───────────────────────────────────────────────────
 // Dynamic imports: these are deferred so the fast path above never pays the cost.
-const { discoverClis, discoverPlugins, ensureUserCliCompatShims, ensureUserAdapters } = await import('./discovery.js');
+const { discoverClis, discoverPlugins, discoverExtraClisDirs, ensureUserCliCompatShims, ensureUserAdapters } = await import('./discovery.js');
 const { getCompletions } = await import('./completion.js');
 const { runCli } = await import('./cli.js');
 const { emitHook } = await import('./hooks.js');
@@ -124,13 +124,22 @@ if (skipUserDiscovery) {
     discoverClis(BUILTIN_CLIS),
   ]);
   await discoverClis(USER_CLIS);
+  // OPENCLI_EXTRA_CLIS_DIR (ADR 0003): host-declared read-only adapter dirs,
+  // scanned like built-in clis; they override built-in and user adapters but
+  // plugins still run last.
+  await discoverExtraClisDirs();
   await discoverPlugins();
 }
 
-// Register exit hook: notice appears after command output (same as npm/gh/yarn)
-registerUpdateNoticeOnExit();
-// Kick off background fetch for next run (non-blocking)
-checkForUpdateBackground();
+// OPENCLI_EMBEDDED (ADR 0003): embedded runtimes skip the whole update-notifier
+// chain — both the exit notice (same effect as OPENCLI_NO_UPDATE_NOTIFIER) and
+// the background fetch. Standalone behaviour is unchanged.
+if (!isEmbeddedRuntime()) {
+  // Register exit hook: notice appears after command output (same as npm/gh/yarn)
+  registerUpdateNoticeOnExit();
+  // Kick off background fetch for next run (non-blocking)
+  checkForUpdateBackground();
+}
 
 // ── Fallback completion: manifest unavailable, use full registry ─────────
 if (getCompIdx !== -1) {

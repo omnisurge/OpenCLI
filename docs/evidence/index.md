@@ -17,7 +17,9 @@
 |---|---|---|
 | [2026-11-17-docs-governance.md](2026-11-17-docs-governance.md) | omnisurge fork 文档治理、门禁与发布守卫 | 2026-11-17 |
 | [2026-11-17-fork-update-notifier.md](2026-11-17-fork-update-notifier.md) | fork 分发版不输出上游升级提示 + 通用 opt-out | 2026-11-17 |
+| [2026-11-17-embedded-runtime.md](2026-11-17-embedded-runtime.md) | 嵌入式运行时契约、状态根、extra dir、embedded 诊断 | 2026-11-17 |
 | [release-1.8.8-omnisurge.3.md](release-1.8.8-omnisurge.3.md) | 1.8.8-omnisurge.3 本地/私有发行包 | 2026-11-17 |
+| [release-1.8.8-omnisurge.4.md](release-1.8.8-omnisurge.4.md) | 1.8.8-omnisurge.4 本地/私有发行包（嵌入式契约） | 2026-11-17 |
 
 ## 模板
 

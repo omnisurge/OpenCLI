@@ -11,6 +11,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Command, InvalidArgumentError, Option } from 'commander';
 import { findPackageRoot, getBuiltEntryCandidates } from './package-paths.js';
+import { opencliRoot } from './embedded-runtime.js';
 import { type CliCommand, fullName, getRegistry, strategyLabel } from './registry.js';
 import { serializeCommand, formatArgSummary } from './serialization.js';
 import { render as renderOutput } from './output.js';
@@ -279,7 +280,7 @@ export type SiteMemoryReport = {
 };
 
 export function checkSiteMemory(site: string): SiteMemoryReport {
-  const siteDir = path.join(os.homedir(), '.opencli', 'sites', site);
+  const siteDir = path.join(opencliRoot(), 'sites', site);
   const endpointsPath = path.join(siteDir, 'endpoints.json');
   const notesPath = path.join(siteDir, 'notes.md');
   let endpointsCount = 0;
@@ -379,7 +380,7 @@ type BrowserTabSummary = {
 };
 
 function getBrowserCacheDir(): string {
-  return process.env.OPENCLI_CACHE_DIR || path.join(os.homedir(), '.opencli', 'cache');
+  return process.env.OPENCLI_CACHE_DIR || path.join(opencliRoot(), 'cache');
 }
 
 function getBrowserTargetStatePath(scope: string): string {
@@ -2718,7 +2719,7 @@ Examples:
         const os = await import('node:os');
         const fs = await import('node:fs');
         const path = await import('node:path');
-        const dir = path.join(os.homedir(), '.opencli', 'clis', site);
+        const dir = path.join(opencliRoot(), 'clis', site);
         const filePath = path.join(dir, `${command}.js`);
 
         if (fs.existsSync(filePath)) {
@@ -2786,7 +2787,7 @@ cli({
 
         const { execFileSync } = await import('node:child_process');
         const { loadFixture, writeFixture, deriveFixture, validateRows, validateRowShape, fixturePath, expandFixtureArgs, parseSeedArgs } = await import('./browser/verify-fixture.js');
-        const filePath = path.join(os.homedir(), '.opencli', 'clis', site, `${command}.js`);
+        const filePath = path.join(opencliRoot(), 'clis', site, `${command}.js`);
         if (!fs.existsSync(filePath)) {
           console.error(`Adapter not found: ${filePath}`);
           console.error(`Run "opencli browser init ${name}" to create it.`);
@@ -3156,7 +3157,7 @@ cli({
     .description('Show which sites have local overrides vs using official baseline')
     .action(async () => {
       const os = await import('node:os');
-      const userClisDir = path.join(os.homedir(), '.opencli', 'clis');
+      const userClisDir = path.join(opencliRoot(), 'clis');
       const builtinClisDir = BUILTIN_CLIS;
       try {
         const userEntries = await fs.promises.readdir(userClisDir, { withFileTypes: true });
@@ -3190,7 +3191,7 @@ cli({
     .argument('<site>', 'Site name (e.g. twitter, bilibili)')
     .action(async (site: string) => {
       const os = await import('node:os');
-      const userClisDir = path.join(os.homedir(), '.opencli', 'clis');
+      const userClisDir = path.join(opencliRoot(), 'clis');
       const builtinSiteDir = path.join(BUILTIN_CLIS, site);
       const builtinSharedDir = path.join(BUILTIN_CLIS, '_shared');
       const userSiteDir = path.join(userClisDir, site);
@@ -3224,7 +3225,7 @@ cli({
     .option('--all', 'Reset all local overrides')
     .action(async (site: string | undefined, opts: { all?: boolean }) => {
       const os = await import('node:os');
-      const userClisDir = path.join(os.homedir(), '.opencli', 'clis');
+      const userClisDir = path.join(opencliRoot(), 'clis');
 
       if (opts.all) {
         try {

@@ -16,10 +16,10 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as os from 'node:os';
 import { PKG_VERSION, PKG_DISTRIBUTION } from './version.js';
+import { isEmbeddedRuntime, opencliRoot } from './embedded-runtime.js';
 
-const CACHE_DIR = path.join(os.homedir(), '.opencli');
+const CACHE_DIR = opencliRoot();
 const CACHE_FILE = path.join(CACHE_DIR, 'update-check.json');
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24h
 const EXTENSION_STALE_MS = 7 * 24 * 60 * 60 * 1000; // 7d
@@ -134,6 +134,7 @@ function buildUpdateNotices({ cliVersion, cache, now, isForkDistribution }: Noti
 export function registerUpdateNoticeOnExit(): void {
   if (isCI()) return;
   if (process.env.OPENCLI_NO_UPDATE_NOTIFIER) return;
+  if (isEmbeddedRuntime()) return;
   if (process.argv.includes('--get-completions')) return;
 
   process.on('exit', (code) => {
@@ -189,6 +190,7 @@ async function fetchLatestExtensionVersion(): Promise<string | undefined> {
  * Fully non-blocking — never awaited.
  */
 export function checkForUpdateBackground(): void {
+  if (isEmbeddedRuntime()) return;
   if (isCI()) return;
   if (_cache?.lastCheck && Date.now() - _cache.lastCheck < CHECK_INTERVAL_MS) return;
 

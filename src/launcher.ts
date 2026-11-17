@@ -18,6 +18,7 @@ import { getElectronApp } from './electron-apps.js';
 import { confirmPrompt } from './tui.js';
 import { CommandExecutionError } from './errors.js';
 import { log } from './logger.js';
+import { opencliRoot } from './embedded-runtime.js';
 
 const POLL_INTERVAL_MS = 500;
 const POLL_TIMEOUT_MS = 15_000;
@@ -275,7 +276,7 @@ export async function launchDetachedApp(executable: string, args: string[], labe
       if (err.code === 'ENOENT') {
         reject(new CommandExecutionError(
           `Could not launch ${label}: executable not found at ${executable}`,
-          `Install ${label}, reinstall it, or register a custom app path in ~/.opencli/apps.yaml`,
+          `Install ${label}, reinstall it, or register a custom app path in ${path.join(opencliRoot(), 'apps.yaml')}`,
         ));
         return;
       }
@@ -316,13 +317,13 @@ export async function launchElectronApp(appPath: string, app: ElectronAppEntry, 
   if (executables.length > 1) {
     throw new CommandExecutionError(
       `Could not launch ${label}: no compatible executable found in ${path.join(appPath, 'Contents', 'MacOS')}`,
-      `Tried: ${executables.map((executable) => path.basename(executable)).join(', ')}. Install ${label}, reinstall it, or register a custom app path in ~/.opencli/apps.yaml`,
+      `Tried: ${executables.map((executable) => path.basename(executable)).join(', ')}. Install ${label}, reinstall it, or register a custom app path in ${path.join(opencliRoot(), 'apps.yaml')}`,
     );
   }
 
   throw lastMissingExecutableError ?? new CommandExecutionError(
     `Could not launch ${label}`,
-    `Install ${label}, reinstall it, or register a custom app path in ~/.opencli/apps.yaml`,
+    `Install ${label}, reinstall it, or register a custom app path in ${path.join(opencliRoot(), 'apps.yaml')}`,
   );
 }
 
@@ -360,7 +361,7 @@ export async function resolveElectronEndpoint(site: string): Promise<string> {
   if (!app) {
     throw new CommandExecutionError(
       `No Electron app registered for site "${site}"`,
-      'Register the app in ~/.opencli/apps.yaml or check the site name.',
+      `Register the app in ${path.join(opencliRoot(), 'apps.yaml')} or check the site name.`,
     );
   }
 
@@ -391,7 +392,7 @@ export async function resolveElectronEndpoint(site: string): Promise<string> {
   if (!appPath) {
     throw new CommandExecutionError(
       `Could not find ${label} on this machine.`,
-      `Install ${label} or register a custom path in ~/.opencli/apps.yaml`,
+      `Install ${label} or register a custom path in ${path.join(opencliRoot(), 'apps.yaml')}`,
     );
   }
 

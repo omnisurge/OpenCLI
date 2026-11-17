@@ -18,9 +18,10 @@ import { getErrorMessage } from './errors.js';
 import { log } from './logger.js';
 import type { ManifestEntry } from './manifest-types.js';
 import { findPackageRoot, getCliManifestPath } from './package-paths.js';
+import { extraClisDirs, opencliRoot } from './embedded-runtime.js';
 
-/** User runtime directory: ~/.opencli */
-export const USER_OPENCLI_DIR = path.join(os.homedir(), '.opencli');
+/** User runtime directory: ~/.opencli (OPENCLI_HOME when set, ADR 0003) */
+export const USER_OPENCLI_DIR = opencliRoot();
 /** User CLIs directory: ~/.opencli/clis */
 export const USER_CLIS_DIR = path.join(USER_OPENCLI_DIR, 'clis');
 /** Plugins directory: ~/.opencli/plugins/ */
@@ -111,6 +112,33 @@ export async function discoverClis(...dirs: string[]): Promise<void> {
       // Fall through to filesystem scan
     }
     await discoverClisFromFs(dir);
+  }
+}
+
+/**
+ * Discover adapters from OPENCLI_EXTRA_CLIS_DIR (ADR 0003).
+ *
+ * Extra dirs use the same semantics as the built-in clis dir: cli-manifest.json
+ * fast path first, filesystem scan fallback, later registration wins. Unlike
+ * the built-in/user dirs, a missing or unreadable extra dir is a visible
+ * warning — the host explicitly declared it, silence would hide misconfig.
+ */
+export async function discoverExtraClisDirs(): Promise<void> {
+  for (const dir of extraClisDirs()) {
+    try {
+      const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+      if (!entries.some((entry) => entry.isDirectory())) {
+        log.warn(
+          `OPENCLI_EXTRA_CLIS_DIR entry has no <site> subdirectory; expected <dir>/<site>/*.js: ${dir}`,
+        );
+        continue;
+      }
+      await discoverClis(dir);
+    } catch (err) {
+      log.warn(
+        `OPENCLI_EXTRA_CLIS_DIR entry not readable or failed to load, skipped: ${dir} (${getErrorMessage(err)})`,
+      );
+    }
   }
 }
 

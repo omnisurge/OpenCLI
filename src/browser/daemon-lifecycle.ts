@@ -7,6 +7,7 @@ import { BrowserConnectError } from '../errors.js';
 import { PKG_VERSION } from '../version.js';
 import { waitForBridgeReady } from './bridge-readiness.js';
 import { fetchDaemonStatus, getDaemonHealth, requestDaemonShutdown, type DaemonHealth, type DaemonStatus } from './daemon-transport.js';
+import { isEmbeddedRuntime } from '../embedded-runtime.js';
 
 export interface DaemonLaunchSpec {
   binary: string;
@@ -179,9 +180,11 @@ function browserConnectErrorFromHealth(health: DaemonHealth, contextId?: string)
     return new BrowserConnectError(
       'Browser Bridge extension not connected',
       'Make sure Chrome/Chromium is open and the OpenCLI extension is enabled.\n' +
-      'If not installed:\n' +
-      '  1. Download: https://github.com/jackwener/opencli/releases\n' +
-      '  2. Open chrome://extensions → Developer Mode → Load unpacked',
+      (isEmbeddedRuntime()
+        ? 'If not installed, use the browser extension bundled with the product release; do not download a separate OpenCLI release.'
+        : 'If not installed:\n' +
+          '  1. Download: https://github.com/jackwener/opencli/releases\n' +
+          '  2. Open chrome://extensions → Developer Mode → Load unpacked'),
       'extension-not-connected',
     );
   }

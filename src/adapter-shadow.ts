@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ManifestEntry } from './manifest-types.js';
 import { findPackageRoot, getCliManifestPath } from './package-paths.js';
+import { opencliRoot } from './embedded-runtime.js';
 
 export type AdapterShadow = {
   name: string;
@@ -44,7 +45,7 @@ function loadBuiltinCommandFiles(builtinClisDir: string): Set<string> {
 }
 
 export function findShadowedUserAdapters(opts: AdapterShadowOptions = {}): AdapterShadow[] {
-  const userClisDir = opts.userClisDir ?? path.join(os.homedir(), '.opencli', 'clis');
+  const userClisDir = opts.userClisDir ?? path.join(opencliRoot(), 'clis');
   const builtinClisDir = opts.builtinClisDir ?? defaultBuiltinClisDir();
   const builtinCommandFiles = loadBuiltinCommandFiles(builtinClisDir);
   const shadows: AdapterShadow[] = [];

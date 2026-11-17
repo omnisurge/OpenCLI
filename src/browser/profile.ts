@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
-import * as os from 'node:os';
 import * as path from 'node:path';
+import { opencliRoot } from '../embedded-runtime.js';
 
 export const DEFAULT_CONTEXT_ID = 'default';
 
@@ -11,7 +11,7 @@ export type ProfileConfig = {
 };
 
 function profileConfigPath(): string {
-  const baseDir = process.env.OPENCLI_CONFIG_DIR || path.join(os.homedir(), '.opencli');
+  const baseDir = process.env.OPENCLI_CONFIG_DIR || opencliRoot();
   return path.join(baseDir, 'browser-profiles.json');
 }
 

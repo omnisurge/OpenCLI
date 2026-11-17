@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const {
   mockGetDaemonHealth,
@@ -342,6 +342,26 @@ describe('doctor report rendering', () => {
     expect(report.issues).toEqual(expect.arrayContaining([
       expect.stringContaining('Local adapter overrides shadow packaged adapters'),
     ]));
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('does not send embedded users to upstream installation/download pages', async () => {
+    vi.stubEnv('OPENCLI_EMBEDDED', '1');
+    mockGetDaemonHealth.mockResolvedValue({
+      state: 'no-extension' as const,
+      status: { extensionConnected: false },
+    });
+    mockSendCommand.mockRejectedValueOnce(new Error('extension not connected'));
+
+    const report = await runBrowserDoctor();
+    const text = report.issues.join('\n');
+
+    expect(text).toContain('bundled with the product release');
+    expect(text).not.toContain('npm install -g @jackwener/opencli');
+    expect(text).not.toContain('github.com/jackwener/opencli/releases');
   });
 
   it('reports profile-required when multiple profiles are connected without a selection', async () => {
