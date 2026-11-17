@@ -28,7 +28,7 @@
 
 | 编号 | 标题 | 状态 |
 |---|---|---|
-| [0001](0001-fork-aware-update-notifier.md) | Fork 分发版的更新提示必须可识别、可关闭 | Proposed |
+| [0001](0001-fork-aware-update-notifier.md) | Fork 分发版的更新提示必须可识别、可关闭 | Implemented |
 
 ## 当前最大编号
 

@@ -16,6 +16,7 @@
 | 文件 | 范围 | 日期 |
 |---|---|---|
 | [2026-11-17-docs-governance.md](2026-11-17-docs-governance.md) | omnisurge fork 文档治理、门禁与发布守卫 | 2026-11-17 |
+| [2026-11-17-fork-update-notifier.md](2026-11-17-fork-update-notifier.md) | fork 分发版不输出上游升级提示 + 通用 opt-out | 2026-11-17 |
 
 ## 模板
 

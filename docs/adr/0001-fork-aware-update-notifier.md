@@ -1,6 +1,6 @@
 # ADR 0001：Fork 分发版的更新提示必须可识别、可关闭
 
-- 状态：Proposed（2026-11-17，依据《SCCS-CLI使用反馈-20261116》⑤裁决立项；实施另安排）
+- 状态：Implemented（2026-11-17，依据《SCCS-CLI使用反馈-20261116》⑤裁决立项；实现与验收见 docs/evidence/2026-11-17-fork-update-notifier.md）
 - 关联：fork 发布身份 commit `02173a22`（package.json `opencliFork` stamp）；
   错误面收敛 `faa6eaeb`（omnisurge.2）
 - 变更级别：C2（改变进程退出行为与用户可见输出），先 ADR 后实现
@@ -110,9 +110,13 @@ SCCS 适配器）时，退出尾部不该出现对宿主用户无意义的升级
 - 不改缓存协议、不动上游 npm/GitHub 常量（fork 判定在生成提示行处短路，
   不在数据源处改 URL——数据源换掉属于「fork 自建更新通道」的另一决策）。
 - 不处理 upstream 2.0.3 的其他变更；本 ADR 结论只适用于 fork 线。
+- 本 ADR 只覆盖 exit update notice；opencli doctor 等命令里仍硬编码的上游安装/下载建议不在本次范围，后续另立 backlog/ADR。
 
 ## 修订记录
 
 - 2026-11-17：按代码与实测更正症状版本（`→ v2.0.3`，非 `v1.8.8`）、
   `isNewer()` 归因与函数行号；验收 #1 补充可证伪 fixture，验收 #4 标明
   不得用 `--version` 作探针。
+- 2026-11-17：完成 fork 短路、OPENCLI_NO_UPDATE_NOTIFIER 与生产调用链集成测试；
+  独立审查无 P0，P1（调用链测试假绿）已修复；状态改为 Implemented，
+  证据见 docs/evidence/2026-11-17-fork-update-notifier.md。
