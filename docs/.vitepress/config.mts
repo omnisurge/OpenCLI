@@ -203,6 +203,7 @@ export default defineConfig({
               items: [
                 { text: 'ADR Index', link: '/adr/' },
                 { text: 'ADR 0001 — Fork-aware update notifier', link: '/adr/0001-fork-aware-update-notifier' },
+                { text: 'ADR 0002 — Release 1.8.8-omnisurge.3', link: '/adr/0002-release-omnisurge-3' },
               ],
             },
           ],
