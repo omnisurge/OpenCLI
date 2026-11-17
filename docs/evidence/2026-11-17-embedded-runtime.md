@@ -1,7 +1,7 @@
 # 嵌入式运行时契约验收（2026-11-17）
 
 - 日期：2026-11-17
-- 分支与 commit：feat/embedded-runtime-contract，基于 915e5711（.3 发行提交）；本批代码/文档在提交前按此工作树验收
+- 分支与 commit：feat/embedded-runtime-contract，基于 915e5711（.3 发行提交），代码/文档提交 fa1e00e9；本批验收在提交前工作树执行，代码与提交一致
 - 变更级别：C2
 - ADR：[ADR 0003](../adr/0003-embedded-runtime-contract.md)（Proposed）、[ADR 0004](../adr/0004-embedded-host-delivery-contract.md)（Proposed）、[ADR 0005](../adr/0005-product-naming-and-technical-identity.md)（Proposed）
 - 目标/范围：实现 OPENCLI_HOME、OPENCLI_EXTRA_CLIS_DIR、OPENCLI_EMBEDDED 三条运行时契约；补齐状态路径、额外目录失败可见性、宿主模块解析验收、doctor/daemon 的 embedded 提示；不安装、不发布 npm、不 tag。

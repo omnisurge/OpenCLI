@@ -1,7 +1,7 @@
 # 发布 1.8.8-omnisurge.4（2026-11-17）
 
 - 版本：1.8.8-omnisurge.4
-- 分支与 commit：feat/embedded-runtime-contract，基于 915e5711（.3 发行提交）；本版在提交前的工作树打包
+- 分支与 commit：feat/embedded-runtime-contract，代码 commit fa1e00e9，基于 915e5711（.3 发行提交）；tgz 由同一代码树在 commit 前打包（docs-only 证据/ADR 状态修订不改变运行时）
 - 变更级别：C3（版本/打包/证据）
 - ADR：[ADR 0003](../adr/0003-embedded-runtime-contract.md)（运行时契约，Implemented）、[ADR 0004](../adr/0004-embedded-host-delivery-contract.md)（宿主交付契约，Proposed）、[ADR 0005](../adr/0005-product-naming-and-technical-identity.md)（命名，Proposed）、[ADR 0006](../adr/0006-release-omnisurge-4.md)（本版发布，Implemented）
 - 上游基线：1.8.8 / 24136945，未升级；fork 补丁新增 embedded-runtime-contract
