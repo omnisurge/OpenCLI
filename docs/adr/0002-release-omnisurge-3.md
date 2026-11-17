@@ -1,6 +1,6 @@
 # ADR 0002：发布 1.8.8-omnisurge.3 交付 fork 更新提示修复
 
-- 状态：Proposed（2026-11-17，所有者授权“先发布当前版本”；C3）
+- 状态：Implemented（2026-11-17，本地/私有 tgz 已生成并验收；安装与标签未授权）
 - 关联：ADR 0001 fork-aware update notifier；C2 已合入 release 线
 - 变更级别：C3（版本与分发）
 
@@ -33,3 +33,4 @@ ADR 0001 的实现已合入 release/1.8.8-omnisurge.2，但 package.json 仍是�
 ## 修订记录
 
 - 2026-11-17：按所有者本次发布授权立项；范围限定为本地/私有 tgz。
+- 2026-11-17：完成 .3 打包与证据；未执行安装、npm 发布或标签。

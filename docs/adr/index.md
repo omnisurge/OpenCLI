@@ -29,7 +29,7 @@
 | 编号 | 标题 | 状态 |
 |---|---|---|
 | [0001](0001-fork-aware-update-notifier.md) | Fork 分发版的更新提示必须可识别、可关闭 | Implemented |
-| [0002](0002-release-omnisurge-3.md) | 发布 1.8.8-omnisurge.3 交付 fork 更新提示修复 | Proposed |
+| [0002](0002-release-omnisurge-3.md) | 发布 1.8.8-omnisurge.3 交付 fork 更新提示修复 | Implemented |
 
 ## 当前最大编号
 
