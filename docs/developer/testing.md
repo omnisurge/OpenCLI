@@ -4,22 +4,17 @@
 
 ## 测试结构
 
-OpenCLI 当前测试主要分成四类：
+OpenCLI 当前测试按以下类别组织：
 
-| 类别 | 位置 | 当前规模 | 主要用途 |
-|---|---|---:|---|
-| 单元测试 | `src/**/*.test.ts` | 60 | 核心运行时、命令层、浏览器桥、输出、插件、诊断 |
-| E2E 测试 | `tests/e2e/*.test.ts` | 11 | 真实 CLI 入口、公开站点、浏览器命令、管理命令、输出格式 |
-| 烟雾测试 | `tests/smoke/*.test.ts` | 1 | 外部 API 与注册完整性健康检查 |
+| 类别 | 位置 | 计数方式 | 主要用途 |
+|---|---|---|---|
+| 单元测试 | `src/**/*.test.ts` | 以 `find src -name '*.test.ts'` 为准 | 核心运行时、命令层、浏览器桥、输出、插件、诊断 |
+| Adapter 测试 | `clis/**/*.test.{ts,js}` | 以 `find clis -name '*.test.*'` 为准 | adapter 命令、数据归一化、参数与容错 |
+| E2E 测试 | `tests/e2e/*.test.ts` | 以 `find tests/e2e -name '*.test.ts'` 为准 | 真实 CLI 入口、公开站点、浏览器命令、管理命令、输出格式 |
+| 烟雾测试 | `tests/smoke/*.test.ts` | 以 `find tests/smoke -name '*.test.ts'` 为准 | 外部 API 与注册完整性健康检查 |
 | 步骤级测试 | `src/pipeline/steps/*.test.ts` | 已包含在单元测试内 | pipeline step 行为与边界情况 |
 
-当前仓库里没有独立的 `clis/**/*.test.{ts,js}` adapter 测试树。adapter 相关验证主要分布在：
-
-- `tests/e2e/`
-- `src/commanderAdapter.test.ts`
-- `src/registry.test.ts`
-- `src/execution.test.ts`
-- `src/validate.ts` / `opencli validate`
+Adapter 测试位于 `clis/**/*.test.{ts,js}`，由 `npm test` / `npm run test:adapter` 执行；不要只依赖 `tests/e2e/` 或 `opencli validate`。文件数量会增长，本页不固化数字，用上面的 `find` 命令取当前值。
 
 ## 本地默认策略
 
@@ -70,21 +65,7 @@ npm run test:adapter
 
 ## 当前 E2E 文件
 
-当前 `tests/e2e/` 包含：
-
-- `browser-auth.test.ts`
-- `browser-public.test.ts`
-- `cli.test.ts`
-- `extension-bridge.test.ts`
-- `formats.test.ts`
-- `list.test.ts`
-- `management.test.ts`
-- `public-commands.test.ts`
-- `recovery.test.ts`
-- `remote-chrome.test.ts`
-- `tab-targeting.test.ts`
-
-如果这个列表变化，以仓库文件为准：
+不在此页枚举，避免清单漂移；以仓库文件为准：
 
 ```bash
 find tests/e2e -name '*.test.ts' | sort
@@ -129,6 +110,8 @@ node dist/src/main.js browser tab list
 
 ## CI 角色
 
+> fork 的 release 分支不触发上游 `ci.yml`（它只看 `main`/`dev`），但会跑本仓 `fork-ci.yml`；`v*` tag 仍会触发继承的 `e2e-headed`（测试）。触发以 `.github/workflows/` 为准，本地门禁与证据见 [开发流程](development-process.md)。
+
 CI 负责更大范围的回归信心，本地负责最快闭环。
 
 适合交给 CI 的内容：
@@ -150,7 +133,7 @@ CI 负责更大范围的回归信心，本地负责最快闭环。
 
 当以下任一项变化时，顺手更新此页：
 
-- `tests/e2e/` 文件列表
+- 测试项目/分层/命令变化（不要重新固化文件清单或数量）
 - 默认本地测试命令
 - `package.json` 测试脚本
 - 共享运行时的高风险模块

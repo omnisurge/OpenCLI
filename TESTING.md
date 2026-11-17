@@ -16,7 +16,7 @@
 
 ## 测试架构
 
-测试分为三层，全部使用 **vitest** 运行：
+测试全部使用 **vitest** 运行，按以下项目/层级组织。下图为分层示意，文件名/数量可能滞后；清单以 §快速核对命令 的 `find` 结果为准。
 
 ```text
 tests/
@@ -35,12 +35,12 @@ clis/
 └── **/*.test.{ts,js}              # adapter 测试（adapter project）
 ```
 
-| 层 | 位置 | 当前文件数 | 运行方式 | 用途 |
-|---|---|---:|---|---|
-| 单元测试 | `src/**/*.test.ts` | 32 | `npm test` | 内部模块、pipeline、runtime |
-| Adapter 测试 | `clis/**/*.test.{ts,js}` | - | `npm test` / `npm run test:adapter` | adapter 命令与数据归一化 |
-| E2E 测试 | `tests/e2e/*.test.ts` | 5 | `npx vitest run tests/e2e/` | 真实 CLI 命令执行 |
-| 烟雾测试 | `tests/smoke/*.test.ts` | 1 | `npx vitest run tests/smoke/` | 外部 API 与注册完整性 |
+| 层 | 位置 | 计数方式 | 运行方式 | 用途 |
+|---|---|---|---|---|
+| 单元测试 | `src/**/*.test.ts` | 以 `find src -name '*.test.ts'` 为准 | `npm test` | 内部模块、pipeline、runtime |
+| Adapter 测试 | `clis/**/*.test.{ts,js}` | 以 `find clis -name '*.test.*'` 为准 | `npm test` / `npm run test:adapter` | adapter 命令与数据归一化 |
+| E2E 测试 | `tests/e2e/*.test.ts` | 以 `find tests/e2e -name '*.test.ts'` 为准 | `npx vitest run tests/e2e/` | 真实 CLI 命令执行 |
+| 烟雾测试 | `tests/smoke/*.test.ts` | 以 `find tests/smoke -name '*.test.ts'` 为准 | `npx vitest run tests/smoke/` | 外部 API 与注册完整性 |
 
 ---
 
@@ -48,11 +48,13 @@ clis/
 
 ### 单元测试与 Adapter 测试
 
+> 下表是覆盖示例，不是完整清单；当前文件以 `find` 结果为准。
+
 | 领域 | 文件 |
 |---|---|
 | 核心运行时与输出 | `src/browser.test.ts`, `src/browser/dom-snapshot.test.ts`, `src/build-manifest.test.ts`, `src/capabilityRouting.test.ts`, `src/doctor.test.ts`, `src/engine.test.ts`, `src/interceptor.test.ts`, `src/output.test.ts`, `src/plugin.test.ts`, `src/registry.test.ts`, `src/snapshotFormatter.test.ts` |
 | pipeline 与下载 | `src/download/index.test.ts`, `src/pipeline/executor.test.ts`, `src/pipeline/template.test.ts`, `src/pipeline/transform.test.ts` |
-| 站点 / adapter 逻辑 | `clis/apple-podcasts/commands.test.ts`, `clis/apple-podcasts/utils.test.ts`, `clis/bloomberg/utils.test.ts`, `clis/chaoxing/utils.test.ts`, `clis/coupang/utils.test.ts`, `clis/google/utils.test.ts`, `clis/grok/ask.test.ts`, `clis/twitter/timeline.test.ts`, `clis/weread/utils.test.ts`, `clis/xiaohongshu/creator-note-detail.test.ts`, `clis/xiaohongshu/creator-notes-summary.test.ts`, `clis/xiaohongshu/creator-notes.test.ts`, `clis/xiaohongshu/search.test.ts`, `clis/xiaohongshu/user-helpers.test.ts`, `clis/xiaoyuzhou/utils.test.ts`, `clis/youtube/transcript-group.test.ts`, `clis/zhihu/download.test.ts` |
+| 站点 / adapter 逻辑 | 以 `find clis -name '*.test.*'` 为准（扩展名/清单不在此固化） |
 
 这些测试覆盖的重点包括：
 
@@ -62,7 +64,9 @@ clis/
 - pipeline 模板求值、执行器与变换步骤
 - 各站点 adapter 的数据归一化、参数处理与容错逻辑
 
-### E2E 测试（5 个文件）
+### E2E 测试（文件清单以命令为准）
+
+> 下表是覆盖示例，不是完整清单；当前文件用 `find tests/e2e -name '*.test.ts' | sort` 获取。
 
 | 文件 | 当前覆盖范围 |
 |---|---|
@@ -73,7 +77,7 @@ clis/
 | `tests/e2e/output-formats.test.ts` | `json` / `yaml` / `csv` / `md` 输出格式校验 |
 | `tests/e2e/plugin-management.test.ts` | `plugin install` / `list` / `update` / `uninstall` 全生命周期 |
 
-### 烟雾测试（1 个文件）
+### 烟雾测试（清单以命令为准）
 
 | 文件 | 当前覆盖范围 |
 |---|---|
@@ -85,6 +89,7 @@ clis/
 
 ```bash
 find src -name '*.test.ts' | sort
+find clis -name '*.test.*' | sort
 find tests/e2e -name '*.test.ts' | sort
 find tests/smoke -name '*.test.ts' | sort
 ```
@@ -116,7 +121,7 @@ npx vitest run tests/e2e/
 npx vitest run tests/smoke/
 
 # 单个测试文件
-npm test -- --run clis/apple-podcasts/commands.test.ts
+npm test -- --run clis/apple-podcasts/commands.test.js
 npx vitest run tests/e2e/management.test.ts
 
 # 全部测试
@@ -193,20 +198,22 @@ it('producthunt me fails gracefully without login', async () => {
 
 ## CI/CD 流水线
 
+> CI 触发与 job 以 `.github/workflows/` 为准；fork 的 release 分支不触发上游 `ci.yml`，但 `v*` tag 会触发继承的 `e2e-headed`（测试）；详见 [开发流程](docs/developer/development-process.md)。
+
 ### `ci.yml`
 
 | Job | 触发条件 | 内容 |
 |---|---|---|
 | `build` | push/PR 到 `main`,`dev` | `tsc --noEmit` + `npm run build` |
 | `unit-test` | push/PR 到 `main`,`dev` | Node `22` 运行 `unit + extension`，按 `2` shard 并行 |
-| `adapter-test` | push/PR 到 `main`,`dev` | Node `22` 单独运行 `adapter` project |
+| `adapter-test` | push 到 `main`/`dev`、`schedule` 或 `workflow_dispatch`（PR 不跑） | Node `22` 单独运行 `adapter` project |
 | `smoke-test` | `schedule` 或 `workflow_dispatch` | 安装真实 Chrome，`xvfb-run` 执行 `tests/smoke/` |
 
 ### `e2e-headed.yml`
 
 | Job | 触发条件 | 内容 |
 |---|---|---|
-| `e2e-headed` | push/PR 到 `main`,`dev`，或手动触发 | 安装真实 Chrome，`xvfb-run` 执行 `tests/e2e/` |
+| `e2e-headed` | push 到 `main`/`dev`（指定 paths）、`v*` tag、`schedule` 或 `workflow_dispatch`（PR 不跑） | 安装真实 Chrome，`xvfb-run` 执行 `tests/e2e/` |
 
 E2E 与 smoke 都使用 `./.github/actions/setup-chrome` 准备真实 Chrome。
 

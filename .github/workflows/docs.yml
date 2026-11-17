@@ -7,6 +7,8 @@ on:
 
 jobs:
   dispatch:
+    # Fork safety: only the upstream repository owns the website deploy token.
+    if: github.repository_owner == 'jackwener' && github.event.repository.name == 'OpenCLI'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger opencli-website rebuild

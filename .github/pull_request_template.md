@@ -19,6 +19,15 @@ Related issue:
 - [ ] I updated tests or docs if needed
 - [ ] I included output or screenshots when useful
 
+### Fork governance (omnisurge)
+
+- [ ] Change class recorded (C0 / C1 / C2 / C3)
+- [ ] C2/C3: ADR added or updated and indexed under `docs/adr/`
+- [ ] C1/C2/C3: evidence file added under `docs/evidence/` and indexed; C0: `ci:fork:docs` result recorded in this PR
+- [ ] Ran `npm run ci:fork` for code changes, `ci:fork:docs` for C0 docs, or `ci:fork:full` before release
+- [ ] Docs sidebar/index updated and `npm run check:docs` passed (if docs changed)
+- [ ] No secrets or real data; fork identity (`name`, `private`) unchanged
+
 ### Documentation (if adding/modifying an adapter)
 
 - [ ] Added doc page under `docs/adapters/` (if new adapter)

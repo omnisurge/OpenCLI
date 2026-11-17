@@ -2,6 +2,8 @@
 
 Thanks for your interest in contributing to OpenCLI.
 
+> **omnisurge fork:** Read `AGENTS.md`, [development-process.md](development-process.md) and [documentation.md](documentation.md) before changing behavior. The upstream instructions below remain the adapter baseline.
+
 ## Quick Start
 
 ```bash

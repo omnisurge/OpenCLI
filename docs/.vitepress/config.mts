@@ -182,6 +182,11 @@ export default defineConfig({
                 { text: 'YAML Adapter Guide (Deprecated)', link: '/developer/yaml-adapter' },
                 { text: 'TypeScript Adapter Guide', link: '/developer/ts-adapter' },
                 { text: 'AI Workflow', link: '/developer/ai-workflow' },
+                { text: 'Development Process', link: '/developer/development-process' },
+                { text: 'Documentation & Docs Map', link: '/developer/documentation' },
+                { text: 'Documentation Audit (2026-05)', link: '/developer/documentation-audit-2026-05' },
+                { text: 'Fork Release Runbook', link: '/developer/fork-release' },
+                { text: 'Decision Records (ADR)', link: '/adr/' },
               ],
             },
             {
@@ -190,6 +195,21 @@ export default defineConfig({
                 { text: 'Listing↔Detail ID Pairing', link: '/conventions/listing-detail-id-pairing' },
                 { text: 'Convention Audit', link: '/conventions/convention-audit' },
               ],
+            },
+          ],
+          '/adr/': [
+            {
+              text: 'Architecture Decisions',
+              items: [
+                { text: 'ADR Index', link: '/adr/' },
+                { text: 'ADR 0001 — Fork-aware update notifier', link: '/adr/0001-fork-aware-update-notifier' },
+              ],
+            },
+          ],
+          '/evidence/': [
+            {
+              text: 'Verification Evidence',
+              items: [{ text: 'Evidence Index', link: '/evidence/' }],
             },
           ],
           '/conventions/': [

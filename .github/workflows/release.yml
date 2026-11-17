@@ -11,6 +11,9 @@ permissions:
 
 jobs:
   release:
+    # Fork safety: this workflow publishes @jackwener/opencli and dispatches the
+    # upstream website. It must never run from the omnisurge fork.
+    if: github.repository_owner == 'jackwener' && github.event.repository.name == 'OpenCLI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

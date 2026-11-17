@@ -9,6 +9,8 @@
 [![Node.js Version](https://img.shields.io/node/v/@jackwener/opencli?style=flat-square)](https://nodejs.org)
 [![License](https://img.shields.io/npm/l/@jackwener/opencli?style=flat-square)](./LICENSE)
 
+> **omnisurge fork：** 开发规则、门禁与发布步骤见 [AGENTS.md](./AGENTS.md)、[开发流程](./docs/developer/development-process.md) 和 [文档地图](./docs/developer/documentation.md)。
+
 OpenCLI 可以用同一套 CLI 做三类事情：
 
 - **直接使用现成适配器**：B站、知乎、小红书、Twitter/X、Reddit、HackerNews 等 [100+ 站点](#内置命令) 开箱即用。

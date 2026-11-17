@@ -1,0 +1,42 @@
+name: Fork CI
+
+# Fork-local gate. Upstream workflows (ci.yml, doc-check.yml, release.yml,
+# docs.yml) target upstream branches/tags and must not be the only safety net
+# for omnisurge branches. Non-main/dev branches run fast; release branches and
+# v* tags run the full local gate.
+on:
+  push:
+    branches-ignore: [main, dev]
+    tags: ['v*']
+  pull_request:
+    branches-ignore: [main, dev]
+  workflow_dispatch:
+
+concurrency:
+  group: fork-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fork-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fork gate (fast; full on release branches/tags)
+        run: |
+          case "$GITHUB_REF" in
+            refs/heads/release/*|refs/tags/v*) bash scripts/ci-fork.sh --full ;;
+            *) bash scripts/ci-fork.sh ;;
+          esac

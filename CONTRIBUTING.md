@@ -2,6 +2,8 @@
 
 Thanks for your interest in contributing to OpenCLI.
 
+> **omnisurge fork:** This repository is the Omnisurge fork of OpenCLI. Before changing behavior, read [AGENTS.md](./AGENTS.md), [docs/developer/development-process.md](./docs/developer/development-process.md) and [docs/developer/documentation.md](./docs/developer/documentation.md). The upstream guide below remains the adapter baseline; fork-specific rules take precedence in this repository.
+
 ## Quick Start
 
 ```bash

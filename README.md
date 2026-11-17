@@ -9,6 +9,8 @@
 [![Node.js Version](https://img.shields.io/node/v/@jackwener/opencli?style=flat-square)](https://nodejs.org)
 [![License](https://img.shields.io/npm/l/@jackwener/opencli?style=flat-square)](./LICENSE)
 
+> **omnisurge fork:** Development rules, gates and release steps are in [AGENTS.md](./AGENTS.md), [docs/developer/development-process.md](./docs/developer/development-process.md) and [docs/developer/documentation.md](./docs/developer/documentation.md).
+
 OpenCLI gives you one surface for three different kinds of automation:
 
 - **Use built-in adapters** for sites like Bilibili, Zhihu, Xiaohongshu, Reddit, HackerNews, Twitter/X, and [many more](#built-in-commands).
