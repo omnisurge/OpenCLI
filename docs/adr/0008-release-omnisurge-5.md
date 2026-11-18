@@ -1,6 +1,6 @@
 # ADR 0008：发布 1.8.8-omnisurge.5
 
-- 状态：Proposed
+- 状态：Accepted（2026-11-18；仅本地/私有 .5 候选独立审查 APPROVE；安装/发布 npm/标签/生产未授权）
 - 日期：2026-11-18
 - 关联：ADR 0003（embedded runtime contract）、ADR 0006（.4 发布，未被批准）、docs/evidence/2026-11-18-release-4-independent-review.md
 - 授权：所有者 2026-11-18 明确说“走.5吧”；本 ADR 只把该授权解释为本地/私有 .5 候选的制作与审查，不包含安装、npm 发布、推送标签或生产部署
@@ -39,3 +39,4 @@
 ## 修订记录
 
 - 2026-11-18：Proposed；所有者授权走 .5，记录范围、构建线、验收和边界。
+- 2026-11-18：Accepted；.5 本地/私有候选已独立审查 APPROVE（release-reviewer，包级 P1 复核、SHA/clean build 核对通过）；不追认 .4，不授权安装/发布/标签/生产。

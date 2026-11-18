@@ -1,11 +1,11 @@
 # 1.8.8-omnisurge.5 本地/私有发行证据
 
-- 状态：候选（独立审查通过前不构成发版批准）
+- 状态：本地/私有 .5 候选已独立审查 APPROVE；安装/发布 npm/标签/生产未授权
 - 分支：release/1.8.8-omnisurge.2
 - 代码基线：f2b034ef（extra dir/genericity 修复）；版本准备提交 0bd3037f（本文件所在提交）
 - 产物构建源：0bd3037f，构建时工作区干净；npm pack 的 prepare/build 未改变 cli-manifest.json（构建后 diff 为 0）
 - 变更级别：C3（版本/打包）；继承 C2 修复
-- ADR：ADR 0008（.5 发布，Proposed）；ADR 0003（两项缺口修复）
+- ADR：ADR 0008（.5 发布，Accepted；仅本地/私有候选）；ADR 0003（两项缺口修复）
 - 授权：所有者 2026-11-18 明确“走.5吧”；范围仅本地/私有 .5 候选，不含安装/npm/标签/生产
 
 ## 产物
@@ -30,6 +30,13 @@
 | npm run build + git diff --exit-code HEAD -- cli-manifest.json | 通过；manifest 1,366 entries，无漂移 |
 | npm pack + SHA256SUMS | 通过；SHA256 与产物一致 |
 
+## 独立审查
+
+- 审查者：release-reviewer，只读；审查范围仅 .5 本地/私有候选。
+- 结论：APPROVE（`.5` 候选；`.4` 与安装/生产发布仍不批准）。
+- 核对：HEAD cd272d88 工作区干净；包内 1,461 个 tracked 文件匹配 0bd3037f；218 个 dist 文件匹配当前构建；SHA256/大小/entry 与证据一致；包级 flat .js warning、不可读 site 隔离、good site 仍注册均通过；定向 6/6、tsc、check:genericity、check:adr 通过。
+- 剩余：安装/干净 install-from-tgz、真实业务命令、实际回退未验；不得把本审查当成安装/生产批准。
+
 ## 真实路径 spot check
 
 - tgz 解包到临时目录，node_modules 仅做只读 symlink（不是安装）。
@@ -42,7 +49,7 @@
 
 ## 未验边界与风险
 
-- 独立审查尚未进行；ADR 0008 在审查通过前保持 Proposed。本文件不能单独作为发版批准。
+- 独立审查已通过，但仅覆盖 .5 本地/私有候选；安装、npm 发布、标签、生产部署仍需所有者另行授权。
 - 未做全局安装/干净 install-from-tgz；未验证安装后回退；未跑真实业务命令。
 - 未验证 daemon/extension 实链路、Windows/Linux、真实浏览器 E2E；仅 macOS 本机与临时 HOME。
 - 未把 .5 pin 到产品仓；产品内嵌端到端和 SCCS 适配器升级属下游动作。
@@ -55,4 +62,4 @@
 
 ## 结论
 
-1.8.8-omnisurge.5 本地/私有候选已从干净提交构建，版本、SHA256、SHA256SUMS、embedded list、extra dir 两项修复和全量门禁通过。尚未独立审查、未安装、未发布 npm、未打标签，因此不能声称发版批准或用户终端已获得 .5。
+1.8.8-omnisurge.5 本地/私有候选已从干净提交构建，版本、SHA256、SHA256SUMS、embedded list、extra dir 两项修复和全量门禁通过，并获独立审查 APPROVE（仅限该候选范围）。未安装、未发布 npm、未打标签，因此不能声称用户终端已获得 .5，也不能把本结论扩展为安装/生产批准；.4 仍保持原 BLOCK 结论。
