@@ -35,7 +35,7 @@
 | [0005](0005-product-naming-and-technical-identity.md) | 产品命名与技术标识（.4 不改名） | Superseded |
 | [0006](0006-release-omnisurge-4.md) | 发布 1.8.8-omnisurge.4 | Proposed |
 | [0007](0007-omni-cli-brand.md) | 采用 Omni CLI 品牌（powered by Omnisurge） | Accepted |
-| [0008](0008-release-omnisurge-5.md) | 发布 1.8.8-omnisurge.5 | Accepted |
+| [0008](0008-release-omnisurge-5.md) | 发布 1.8.8-omnisurge.5 | Implemented |
 
 ## 当前最大编号
 
