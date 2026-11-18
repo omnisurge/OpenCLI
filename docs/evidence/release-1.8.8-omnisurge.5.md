@@ -2,7 +2,7 @@
 
 - 状态：本地/私有 .5 候选已独立审查 APPROVE；安装/发布 npm/标签/生产未授权
 - 分支：release/1.8.8-omnisurge.2
-- 代码基线：f2b034ef（extra dir/genericity 修复）；版本准备提交 0bd3037f（本文件所在提交）
+- 代码基线：f2b034ef（extra dir/genericity 修复）；版本准备提交 0bd3037f；本证据文件后续在 cd272d88、d16d6453 以 docs-only 更新
 - 产物构建源：0bd3037f，构建时工作区干净；npm pack 的 prepare/build 未改变 cli-manifest.json（构建后 diff 为 0）
 - 变更级别：C3（版本/打包）；继承 C2 修复
 - ADR：ADR 0008（.5 发布，Accepted；仅本地/私有候选）；ADR 0003（两项缺口修复）
