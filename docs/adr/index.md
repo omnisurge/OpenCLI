@@ -35,7 +35,8 @@
 | [0005](0005-product-naming-and-technical-identity.md) | 产品命名与技术标识（.4 不改名） | Superseded |
 | [0006](0006-release-omnisurge-4.md) | 发布 1.8.8-omnisurge.4 | Proposed |
 | [0007](0007-omni-cli-brand.md) | 采用 Omni CLI 品牌（powered by Omnisurge） | Accepted |
+| [0008](0008-release-omnisurge-5.md) | 发布 1.8.8-omnisurge.5 | Proposed |
 
 ## 当前最大编号
 
-本仓当前最大编号是 `0007`。新增决策从 `0008` 开始。
+本仓当前最大编号是 `0008`。新增决策从 `0009` 开始。
