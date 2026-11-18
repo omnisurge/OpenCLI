@@ -98,11 +98,12 @@ C1/C2/C3 在 `docs/evidence/` 新建本批文件（模板见 [evidence/template.
 | C1 内部实现 | `npx tsc --noEmit` + 目标 `npx vitest run <file>` | PR 前补 `npm run ci:fork` |
 | C2 CLI 行为/输出 | `npm run ci:fork` + 目标测试 | 至少一条真实命令；证据 |
 | 适配器/清单 | `npm run build` + `git diff --exit-code HEAD -- cli-manifest.json` + `npm run test:adapter` | 列投影/ID 规则按需跑 check 脚本 |
+| 核心通用性 | `npm run check:genericity` | `src/` 只放通用运行时；下游专名/私有域名/凭据假设必须留在 adapter/host |
 | 浏览器/daemon/扩展 | 对应 unit + `npm run test:e2e`（或 headed 手验） | 无法跑时写未验、原因、风险 |
 | 工作流/发布配置 | YAML/语法检查 + `npm run check:docs`（涉及文档时） | 不得触发上游发布链 |
 | 发布批次 | `npm run ci:fork:full` | 打包/安装/回退证据 + 所有者授权 |
 
-- `npm run ci:fork` = `npx tsc --noEmit` + `npm run check:docs` + unit project。
+- `npm run ci:fork` = `npx tsc --noEmit` + `npm run check:genericity` + `npm run check:docs` + unit project。
 - `npm run ci:fork:full` = 快速门禁 + `npm run build` + manifest 漂移 + 两个 baseline 检查 + `npm test`。
 - `npm run ci:fork:docs` 只跑文档门禁；不能替代代码门禁。
 

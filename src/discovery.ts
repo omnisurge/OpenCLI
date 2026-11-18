@@ -123,15 +123,26 @@ export async function discoverClis(...dirs: string[]): Promise<void> {
  * the built-in/user dirs, a missing or unreadable extra dir is a visible
  * warning — the host explicitly declared it, silence would hide misconfig.
  */
+function isFlatAdapterFile(name: string): boolean {
+  return name.endsWith('.js') && !name.endsWith('.d.js') && !name.endsWith('.test.js');
+}
+
 export async function discoverExtraClisDirs(): Promise<void> {
   for (const dir of extraClisDirs()) {
     try {
       const entries = await fs.promises.readdir(dir, { withFileTypes: true });
-      if (!entries.some((entry) => entry.isDirectory())) {
+      const siteDirs = entries.filter((entry) => entry.isDirectory());
+      const flatFiles = entries.filter((entry) => entry.isFile() && isFlatAdapterFile(entry.name));
+      if (siteDirs.length === 0) {
         log.warn(
           `OPENCLI_EXTRA_CLIS_DIR entry has no <site> subdirectory; expected <dir>/<site>/*.js: ${dir}`,
         );
         continue;
+      }
+      if (flatFiles.length > 0) {
+        log.warn(
+          `OPENCLI_EXTRA_CLIS_DIR has flat adapter file(s) ignored; expected <dir>/<site>/*.js: ${flatFiles.map((entry) => path.join(dir, entry.name)).join(', ')}`,
+        );
       }
       await discoverClis(dir);
     } catch (err) {
@@ -200,7 +211,11 @@ async function discoverClisFromFs(dir: string): Promise<void> {
     .map(async (entry) => {
       const site = entry.name;
       const siteDir = path.join(dir, site);
-      const files = await fs.promises.readdir(siteDir);
+      const files = await fs.promises.readdir(siteDir).catch((err) => {
+        log.warn(`Failed to read site directory ${siteDir}, skipped: ${getErrorMessage(err)}`);
+        return null;
+      });
+      if (files === null) return;
       await Promise.all(files.map(async (file) => {
         const filePath = path.join(siteDir, file);
         if (isYamlAdapterFile(file)) {
@@ -211,10 +226,12 @@ async function discoverClisFromFs(dir: string): Promise<void> {
           return;
         }
         if (file.endsWith('.js') && !file.endsWith('.d.js') && !file.endsWith('.test.js')) {
-          if (!(await isCliModule(filePath))) return;
-          await import(pathToFileURL(filePath).href).catch((err) => {
+          try {
+            if (!(await isCliModule(filePath))) return;
+            await import(pathToFileURL(filePath).href);
+          } catch (err) {
             log.warn(`Failed to load module ${filePath}: ${getErrorMessage(err)}`);
-          });
+          }
         }
       }));
     });

@@ -1,6 +1,6 @@
 # ADR 0006：发布 1.8.8-omnisurge.4
 
-- 状态：Implemented（2026-11-17；本地/私有 tgz 已生成并验收；安装与标签未授权；见 docs/evidence/release-1.8.8-omnisurge.4.md）
+- 状态：Proposed（2026-11-17 本地/私有 tgz 已生成；2026-11-18 独立审查 BLOCK，C3 发布批准未完成；见 docs/evidence/2026-11-18-release-4-independent-review.md）
 - 关联：ADR 0003（嵌入式运行环境契约）、ADR 0004（宿主内嵌交付契约）、ADR 0005（命名与技术标识）；ADR 0002（.3 发布先例）
 - 变更级别：C3（版本、打包、发行证据；不发布 npm、不运行上游 workflow、不安装）
 
@@ -45,3 +45,4 @@
 ## 修订记录
 
 - 2026-11-17：Proposed；.4 发布范围、门禁、证据与回退。
+- 2026-11-18：独立审查 BLOCK；无历史独立批准、无仓库可核验的 owner 授权、未合入发布线、ADR 0003 两项验收未落实。.4 仅保留为技术包，不视为发版批准；修复见 docs/evidence/2026-11-18-embedded-extra-dir-genericity.md。

@@ -21,6 +21,7 @@ run() { step "$*"; "$@"; }
 
 if [[ "$mode" != "docs" ]]; then
   run npx tsc --noEmit
+  run npm run check:genericity
 fi
 
 run npm run check:docs

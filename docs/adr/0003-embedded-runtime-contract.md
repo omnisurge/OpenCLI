@@ -104,3 +104,5 @@ OPENCLI_CONFIG_DIR、OPENCLI_CACHE_DIR 在各自站点保持显式覆盖，优�
 ## 修订记录
 
 - 2026-11-17：Proposed；补 supervision-assistant ADR 0048 关联、状态矩阵、extra dir 布局/模块解析/错误处理、doctor/daemon 文案、验收与边界。
+- 2026-11-17：Implemented；三条运行时契约与定向验收完成，随 .4 交付。
+- 2026-11-18：独立审查发现 flat .js 与不可读 site 两项验收缺口；在 feat/embedded-runtime-contract 工作区修复并补回归测试。.4 冻结包未重建，发版需新版本候选并复审。

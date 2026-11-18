@@ -20,6 +20,8 @@
 | [2026-11-17-embedded-runtime.md](2026-11-17-embedded-runtime.md) | 嵌入式运行时契约、状态根、extra dir、embedded 诊断 | 2026-11-17 |
 | [release-1.8.8-omnisurge.3.md](release-1.8.8-omnisurge.3.md) | 1.8.8-omnisurge.3 本地/私有发行包 | 2026-11-17 |
 | [release-1.8.8-omnisurge.4.md](release-1.8.8-omnisurge.4.md) | 1.8.8-omnisurge.4 本地/私有发行包（嵌入式契约） | 2026-11-17 |
+| [2026-11-18-release-4-independent-review.md](2026-11-18-release-4-independent-review.md) | 1.8.8-omnisurge.4 独立发版审查（BLOCK） | 2026-11-18 |
+| [2026-11-18-embedded-extra-dir-genericity.md](2026-11-18-embedded-extra-dir-genericity.md) | extra dir 验收修复与 fork 通用性门禁 | 2026-11-18 |
 
 ## 模板
 

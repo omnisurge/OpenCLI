@@ -79,6 +79,7 @@
     "check:silent-column-drop": "node scripts/check-silent-column-drop.mjs",
     "check:typed-error-lint": "node scripts/check-typed-error-lint.mjs",
     "check:adr": "node scripts/check-docs.mjs --adr-only",
+    "check:genericity": "node scripts/check-fork-genericity.mjs",
     "check:docs": "bash scripts/check-doc-coverage.sh --strict && node scripts/check-docs.mjs && npm run docs:build",
     "ci:fork": "bash scripts/ci-fork.sh",
     "ci:fork:docs": "bash scripts/ci-fork.sh --docs",

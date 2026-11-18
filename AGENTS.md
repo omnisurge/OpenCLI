@@ -15,10 +15,12 @@
 | 上游 remote（`origin`） | `git@github.com:jackwener/OpenCLI.git` |
 | fork remote（`fork`） | `git@github.com:omnisurge/OpenCLI.git` |
 | 当前上游基线 | `1.8.8` / 上游 commit `24136945`（以 `package.json` 的 `opencliFork` 为准） |
-| 当前 fork 版本线 | `1.8.8-omnisurge.<n>`（当前分支 `release/1.8.8-omnisurge.2`） |
-| fork 独有提交 | `90c18cac`（非浏览器 trace）、`02173a22`（身份戳）、`faa6eaeb`（错误出口脱敏） |
+| 当前 fork 版本 | `1.8.8-omnisurge.4`（`package.json`；.4 已冻结，尚未安装/发版批准） |
+| 当前工作分支 | `feat/embedded-runtime-contract`（HEAD `95bdbccf`；.4 代码提交 `fa1e00e9`） |
+| 当前发布线 | `release/1.8.8-omnisurge.2`；`.4` 尚未合入该线，合并/发版需单独收口 |
+| fork 独有提交 | 11 个（`git log --oneline origin/main..HEAD`；补丁清单见 `package.json.opencliFork.patches`） |
 
-以上为 2026-11-17 快照；版本/分支以 `package.json` 的 `opencliFork` 与 `git` 为准，变更时同步本表。
+以上为 2026-11-18 快照；版本/分支以 `package.json` 的 `opencliFork` 与 `git` 为准，变更时同步本表。
 
 1. **不得改变分发身份**：`package.json` 的 `name` 保持 `@jackwener/opencli`，`private: true` 不得删除；不得向 npm 发布；不得把 `repository` 指回上游。
 2. **不得运行上游发布链**：`.github/workflows/release.yml` 与 `docs.yml` 只属于上游；fork 推送 `v*` 标签前必须确认**被标记的提交已包含**仓库守卫，且所有者明确授权；守卫未合入或未验证前不得推标签。fork 发行是本地/私有打包，不是 npm 发布。
@@ -28,6 +30,7 @@
 6. **不执行未授权的生产动作**：不自动安装/替换全局 `opencli`、不重启服务、不碰 NAS/生产环境；发布、安装与回退各自取得所有者授权。
 7. **生成物不手改**：根 `dist/` 是构建产物（gitignore；`extension/dist/` 按上游约定单独处理）；`cli-manifest.json` 由 `npm run build` 生成且入库，漂移门禁会拒绝手写或未重建的清单。
 8. **上游升级流程**：记录新的 `upstreamVersion`/`upstreamCommit`，从新基线开新 `release/*` 线；重跑本文件 §6 的全部门禁，不把旧线绿测当新基线证明。
+9. **核心保持通用**：`src/` 是 OpenCLI 通用运行时，不写下游产品/适配器专名、私有域名或凭据假设；下游改进通过 `clis/`、`OPENCLI_EXTRA_CLIS_DIR` 或宿主 payload 实现。`npm run check:genericity` 是硬门禁，不能为单一产品私有化核心。
 
 ## 2. 先确认事实与契约，不猜
 
@@ -88,7 +91,8 @@ C2/C3 的 ADR 状态至少 `Proposed`；实施完成并通过验证后改为 `Im
 | `npm run check:typed-error-lint` | 静默失败基线 | 错误处理改动 |
 | `npm run check:docs` | 文档覆盖 + 链接/归类/sidebar/evidence/ADR + VitePress 构建 | 任何文档改动 |
 | `npm run check:adr` | 仅 ADR 索引/结构/sidebar | ADR 改动 |
-| `npm run ci:fork` | tsc + docs + unit（快速门禁） | 日常提交前 |
+| `npm run check:genericity` | `src/` 不得出现下游专名/私有域名/凭据假设 | 核心代码/测试改动 |
+| `npm run ci:fork` | tsc + 通用性 + docs + unit（快速门禁） | 日常提交前 |
 | `npm run ci:fork:full` | 快速门禁 + build/manifest/约定基线与 `npm test` | 发布前 |
 | `npm run ci:fork:docs` | 仅文档门禁 | C0 文档改动 |
 
