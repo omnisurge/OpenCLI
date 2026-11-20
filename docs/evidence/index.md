@@ -23,6 +23,7 @@
 | [2026-11-18-release-4-independent-review.md](2026-11-18-release-4-independent-review.md) | 1.8.8-omnisurge.4 独立发版审查（BLOCK） | 2026-11-18 |
 | [2026-11-18-embedded-extra-dir-genericity.md](2026-11-18-embedded-extra-dir-genericity.md) | extra dir 验收修复与 fork 通用性门禁 | 2026-11-18 |
 | [release-1.8.8-omnisurge.5.md](release-1.8.8-omnisurge.5.md) | 1.8.8-omnisurge.5 本地/私有正式发行包 | 2026-11-18 |
+| [2026-11-20-lockfile-reconcile.md](2026-11-20-lockfile-reconcile.md) | fork lockfile turndown/ws reconcile | 2026-11-20 |
 
 ## 模板
 
