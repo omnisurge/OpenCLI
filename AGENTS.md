@@ -15,9 +15,9 @@
 | 上游 remote（`origin`） | `git@github.com:jackwener/OpenCLI.git` |
 | fork remote（`fork`） | `git@github.com:omnisurge/OpenCLI.git` |
 | 当前上游基线 | `1.8.8` / 上游 commit `24136945`（以 `package.json` 的 `opencliFork` 为准） |
-| 当前 fork 版本 | `1.8.8-omnisurge.5`（`package.json`；本地/私有正式发行；安装/发布/标签推送/生产未授权） |
-| 当前工作分支 | `release/1.8.8-omnisurge.2`（.5 正式发行；.4 代码提交 `fa1e00e9`，修复提交 `f2b034ef`） |
-| 当前发布线 | `release/1.8.8-omnisurge.2`；`.5` 已在此线本地/私有发行，安装/标签推送另需授权 |
+| 当前 fork 版本 | `1.8.8-omnisurge.6`（`package.json`；本地/私有 .6 发行中；安装/发布/标签推送/生产未授权） |
+| 当前工作分支 | `release/1.8.8-omnisurge.2`（.6 发行中；.4 代码提交 `fa1e00e9`，修复提交 `f2b034ef`） |
+| 当前发布线 | `release/1.8.8-omnisurge.2`；`.6` 在此线发行，安装/标签推送另需授权 |
 | fork 独有提交 | 以 `git log --oneline origin/main..HEAD` 为准；补丁清单见 `package.json.opencliFork.patches` |
 
 以上为 2026-11-18 快照；版本/分支以 `package.json` 的 `opencliFork` 与 `git` 为准，变更时同步本表。

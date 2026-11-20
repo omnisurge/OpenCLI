@@ -210,6 +210,7 @@ export default defineConfig({
                 { text: 'ADR 0006 — Release 1.8.8-omnisurge.4', link: '/adr/0006-release-omnisurge-4' },
                 { text: 'ADR 0007 — Omni CLI brand', link: '/adr/0007-omni-cli-brand' },
                 { text: 'ADR 0008 — Release 1.8.8-omnisurge.5', link: '/adr/0008-release-omnisurge-5' },
+                { text: 'ADR 0009 — Release 1.8.8-omnisurge.6', link: '/adr/0009-release-omnisurge-6' },
               ],
             },
           ],
