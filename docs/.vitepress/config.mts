@@ -211,6 +211,8 @@ export default defineConfig({
                 { text: 'ADR 0007 — Omni CLI brand', link: '/adr/0007-omni-cli-brand' },
                 { text: 'ADR 0008 — Release 1.8.8-omnisurge.5', link: '/adr/0008-release-omnisurge-5' },
                 { text: 'ADR 0009 — Release 1.8.8-omnisurge.6', link: '/adr/0009-release-omnisurge-6' },
+                { text: 'ADR 0010 — Runtime core / dev tool boundary', link: '/adr/0010-runtime-core-dev-tool-boundary' },
+                { text: 'ADR 0011 — Runtime core package profile', link: '/adr/0011-runtime-core-package-profile' },
               ],
             },
           ],
