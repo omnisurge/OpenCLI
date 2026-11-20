@@ -1,15 +1,15 @@
 # ADR 0009：发布 1.8.8-omnisurge.6
 
-- 状态：Proposed（2026-11-20；所有者授权发 .6；待构建、门禁与独立审查）
+- 状态：Implemented（2026-11-20；本地/私有 .6 正式发行；独立审查 APPROVE；安装/发布 npm/标签推送/生产未授权）
 - 日期：2026-11-20
 - 关联：ADR 0008（.5 本地/私有发行）、ADR 0003（embedded runtime contract）、ADR 0007（Omni CLI 品牌；技术身份不变）
 - 授权：所有者 2026-11-20 明确说“现在先发 .6 版本”；范围是本地/私有 .6 发行，不含全局安装、npm 发布、推送标签或生产部署
 
 ## 背景
 
-.5 已按 ADR 0008 作为本地/私有版本发行，但其 tgz 内的 package-lock 仍是旧依赖（turndown 7.2.2 / ws 8.21.0）。之后按 supervision-assistant ADR0048 裁决一完成 fork lockfile reconcile，并新增 src/dependency-lock.test.ts 回归测试，提交为 9d7752e8。
+.5 已按 ADR 0008 作为本地/私有版本发行，但其源树内的 package-lock 仍是旧依赖（turndown 7.2.2 / ws 8.21.0）；.5 tgz 本身不包含 package-lock。之后按 supervision-assistant ADR0048 裁决一完成 fork lockfile reconcile，并新增 src/dependency-lock.test.ts 回归测试，提交为 9d7752e8。
 
-.6 需要成为第一个把已批准依赖锁（turndown 7.2.4 / ws 8.22.0）原生带入 fork 产物的版本；.5 的 tag 和 tgz 保持不变，不能被覆盖或重新解释。
+.6 需要成为第一个在 fork 源树中带已批准依赖锁（turndown 7.2.4 / ws 8.22.0）的发行版本；产品 pack-sccs-runtime.sh 会复制该 lock 并 npm ci。.5 的 tag 和 tgz 保持不变，不能被覆盖或重新解释。
 
 ## 决策
 
@@ -40,3 +40,4 @@
 ## 修订记录
 
 - 2026-11-20：Proposed；所有者授权发 .6，记录版本、锁文件修复范围、发布线和验收边界。
+- 2026-11-20：Implemented；.6 在 01a202e2 干净构建，独立 release-reviewer APPROVE（仅本地/私有候选），产物与证据记录完成；仍未安装、未 npm 发布、未推标签、未生产部署。

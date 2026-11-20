@@ -36,7 +36,7 @@
 | [0006](0006-release-omnisurge-4.md) | 发布 1.8.8-omnisurge.4 | Proposed |
 | [0007](0007-omni-cli-brand.md) | 采用 Omni CLI 品牌（powered by Omnisurge） | Accepted |
 | [0008](0008-release-omnisurge-5.md) | 发布 1.8.8-omnisurge.5 | Implemented |
-| [0009](0009-release-omnisurge-6.md) | 发布 1.8.8-omnisurge.6 | Proposed |
+| [0009](0009-release-omnisurge-6.md) | 发布 1.8.8-omnisurge.6 | Implemented |
 
 ## 当前最大编号
 
