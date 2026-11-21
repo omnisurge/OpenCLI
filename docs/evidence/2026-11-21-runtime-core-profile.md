@@ -1,7 +1,7 @@
 # Runtime core profile 实现证据
 
 - 日期：2026-11-21
-- 分支与 commit：worktree 分支 runtime-core-profile；基线 bd065353（ADR 0010/0011 Proposed）；实现提交 55aeed8e
+- 分支与 commit：worktree 分支 runtime-core-profile；基线 bd065353（ADR 0010/0011 Proposed）；实现提交 55aeed8e；可复现性修复提交 80ea5c7b
 - 变更级别：C2/C3（新增 runtime-core 入口、构建 profile、边界门禁；不改变现有 full CLI 行为）
 - ADR：ADR 0010、ADR 0011（保持 Proposed；本证据只证明 core profile 实现候选，不声称 ADR 已完成）
 - 目标 / 范围：实现一个可独立构建、可独立安装的 runtime-core profile，验证 core + SCCS adapter 的最小运行路径
