@@ -1,6 +1,6 @@
 # ADR 0011：Runtime core 的发行 profile 与包边界
 
-- 状态：Proposed（2026-11-20；探查完成，未实现）
+- 状态：Proposed（2026-11-20；2026-11-21 core profile 实现候选；embedded-sccs/product pack 与 browser capability 未完成）
 - 日期：2026-11-20
 - 关联：ADR 0010（runtime core/dev tool 分界）、ADR 0007（Omni CLI 品牌）、docs/evidence/2026-11-20-runtime-core-boundary-exploration.md
 - 变更级别：C3（包、profile、分发边界；本 ADR 只定候选结构，不执行改包或发版）
@@ -42,6 +42,11 @@ ADR 0010 决定 core 与 dev tool 共享同一执行内核，但还需要明确�
 - core 不包含 SCCS 业务逻辑；SCCS adapter 仍在 supervision-assistant。
 - 不因轻量化删除 browser/download 能力；它们是可选发行物，不是被淘汰能力。
 
+## 实现例外
+
+2026-11-21 所有者批准执行下一步后，core build profile 作为候选实现（build:runtime-core、pack:runtime-core、独立 lock、standalone 安装与边界门禁），但不代表 npm 发布、不改 .6 发行物、不执行产品 repack。本文件决策 7 中“不创建包、不修改 package.json/bin”的边界不覆盖本次候选构建；embedded-sccs profile、browser capability 正向和正式产品切换仍未完成，ADR 状态仍保持 Proposed。
+
 ## 修订记录
 
 - 2026-11-20：Proposed；定义 full/core/embedded-sccs profile 与候选包边界，未实现。
+- 2026-11-21：core build profile 实现候选（build:runtime-core/pack:runtime-core、独立 lock、standalone 安装、边界门禁通过）；embedded-sccs 属产品 pack，browser capability 正向未验，状态保持 Proposed。

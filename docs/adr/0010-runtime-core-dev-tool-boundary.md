@@ -1,6 +1,6 @@
 # ADR 0010：Runtime core 与开发工具共享同一执行内核
 
-- 状态：Proposed（2026-11-20；探查完成，未实现）
+- 状态：Proposed（2026-11-20；2026-11-21 core profile 实现候选；完整 runtime/browser capability 未完成）
 - 日期：2026-11-20
 - 关联：ADR 0003（embedded runtime contract）、ADR 0007（Omni CLI 品牌）、docs/evidence/2026-11-20-runtime-core-boundary-exploration.md
 - 变更级别：C3（运行时/分发边界；本 ADR 只定方向，不执行版本或打包动作）
@@ -31,6 +31,12 @@ SCCS adapter 只 import @jackwener/opencli/registry 与 @jackwener/opencli/error
 - sccs adapter 的 host import 审计只允许 @jackwener/opencli/registry 与 @jackwener/opencli/errors，不出现 core 私有路径。
 - dev tool 保持完整命令面和现有门禁；core 的体积、依赖数、启动/加载面与完整 host 分开记录，不以 dev tool 绿测替代 core 验证。
 
+## 实现例外
+
+2026-11-21 core 首个 profile 的实现使用 `runtime-execution.ts` / `runtime-commander.ts` 薄适配层，而不是直接 import `execution.ts` / `commanderAdapter.ts`：后两者静态依赖 browser/daemon，无法进入 browser-free core 闭包。两者共享 `registry`、`discovery`、`execution-core`（参数准备）、`output`、`errors`、`hooks` 契约；full 版仍是唯一完整执行器。该分层是 core profile 的临时实现例外，收敛/替换路径留待后续增量，不改变本 ADR 的目标。
+
+同日，所有者批准执行下一步后，core 首个 profile 作为候选实现进入本 worktree；本文件决策 7 与 `## 边界` 中“不执行实现/不实现 runtime core”的描述是 2026-11-20 ADR 起草时的范围，不覆盖本次候选实现。ADR 状态仍保持 Proposed，完整 browser capability、embedded-sccs product pack 与正式发布仍未完成。
+
 ## 边界
 
 - 不实现 runtime core；不拆包、不发版、不安装、不改产品 pin。
@@ -40,3 +46,4 @@ SCCS adapter 只 import @jackwener/opencli/registry 与 @jackwener/opencli/error
 ## 修订记录
 
 - 2026-11-20：Proposed；基于 runtime core 边界探查记录方向，未实现。
+- 2026-11-21：实现范围澄清；core 首版支持 browser:false func 与非浏览器 pipeline 子集，完整 browser/download capability 与 embedded-sccs product profile 未完成，状态保持 Proposed。

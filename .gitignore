@@ -6,6 +6,7 @@ dist/
 .worktrees/
 .mcp.json
 *.log
+!docs/evidence/*.log
 .DS_Store
 
 # VitePress

@@ -7,7 +7,7 @@ import { log } from '../../logger.js';
 import type { IPage } from '../../types.js';
 import { render } from '../template.js';
 
-import { isRecord, mapConcurrent } from '../../utils.js';
+import { isRecord, mapConcurrent } from '../../core-utils.js';
 
 
 

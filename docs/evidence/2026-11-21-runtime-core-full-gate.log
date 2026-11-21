@@ -1,0 +1,1235 @@
+
+> @jackwener/opencli@1.8.8-omnisurge.6 ci:fork:full
+> bash scripts/ci-fork.sh --full
+
+
+==> npx tsc --noEmit
+
+==> npm run check:genericity
+
+> @jackwener/opencli@1.8.8-omnisurge.6 check:genericity
+> node scripts/check-fork-genericity.mjs
+
+fork genericity: OK (215 source files)
+
+==> npm run check:docs
+
+> @jackwener/opencli@1.8.8-omnisurge.6 check:docs
+> bash scripts/check-doc-coverage.sh --strict && node scripts/check-docs.mjs && npm run docs:build
+
+📊 Doc Coverage: 179/179 adapters documented
+
+✅ All adapters have documentation.
+docs-check: OK (256 docs, 11 ADR, 12 evidence)
+
+> @jackwener/opencli@1.8.8-omnisurge.6 docs:build
+> vitepress build docs
+
+
+  vitepress v1.6.4
+
+- building client + server bundles...
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[32m✓[0m building client + server bundles...
+- rendering pages...
+[32m✓[0m rendering pages...
+build complete in 5.96s.
+
+==> npm run build
+
+> @jackwener/opencli@1.8.8-omnisurge.6 build
+> npm run clean-dist && npm run build-manifest
+
+
+> @jackwener/opencli@1.8.8-omnisurge.6 clean-dist
+> node scripts/clean-dist.cjs
+
+
+> @jackwener/opencli@1.8.8-omnisurge.6 prebuild-manifest
+> tsc --build && node -e "require('fs').chmodSync('dist/src/main.js', 0o755)"
+
+
+> @jackwener/opencli@1.8.8-omnisurge.6 build-manifest
+> tsx src/build-manifest.ts
+
+✅ Manifest compiled: 1366 entries → /Users/panhaowei/Development/OpenCLI/.agents/worktrees/runtime-core-profile/cli-manifest.json
+✅ Restored executable permission: dist/src/main.js
+
+==> verify cli-manifest.json is committed and current
+
+==> npm run check:silent-column-drop
+
+> @jackwener/opencli@1.8.8-omnisurge.6 check:silent-column-drop
+> node scripts/check-silent-column-drop.mjs
+
+Silent-column-drop gate: current=94, baseline=94, new=0, resolved=0
+OK - no new silent-column-drop violations.
+
+==> npm run check:typed-error-lint
+
+> @jackwener/opencli@1.8.8-omnisurge.6 check:typed-error-lint
+> node scripts/check-typed-error-lint.mjs
+
+Typed-error lint gate: current=130, baseline=130, new=0, resolved=0
+OK - no new typed-error lint violations.
+
+==> npm test
+
+> @jackwener/opencli@1.8.8-omnisurge.6 test
+> vitest run --project unit --project extension --project adapter
+
+
+ RUN  v4.1.4 /Users/panhaowei/Development/OpenCLI/.agents/worktrees/runtime-core-profile
+
+ ✓ |extension| extension/src/journal.test.ts (7 tests) 4ms
+ ✓ |extension| extension/src/cdp.test.ts (18 tests) 77ms
+stdout | extension/src/background.test.ts > background tab isolation > lists only automation-window web tabs
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > lists cross-origin frames in the same order exposed by snapshot [F#] markers
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > lists cross-origin frames in the same order exposed by snapshot [F#] markers
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > does not parse lease-key separators from command session fields
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > routes structured command session and surface fields without encoded lease keys
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > routes structured command session and surface fields without encoded lease keys
+[opencli] Created owned automation window 1 (start=about:blank)
+
+ ✓ |unit| src/browser/dom-helpers.test.ts (9 tests) 256ms
+# ⚠  Failed to load manifest /var/folders/zl/whmz_0jn6zs38684l9yq9nyh0000gn/T/opencli-manifest-fallback-p4YajD/cli-manifest.json: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+ ✓ |unit| src/engine.test.ts (26 tests) 230ms
+ ✓ |unit| src/observation/public-output.test.ts (96 tests) 271ms
+stdout | extension/src/background.test.ts > background tab isolation > does not route encoded adapter lease keys through the command session backdoor
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > does not route encoded adapter lease keys through the command session backdoor
+[opencli] Created owned interactive window 1 (start=about:blank)
+
+ ✓ |unit| src/cli.test.ts (167 tests) 262ms
+ ✓ |unit| src/package-exports.test.ts (19 tests) 555ms
+     ✓ non-test adapters only import node builtins, relative modules, or opencli public APIs  459ms
+ ✓ |unit| src/browser/page.test.ts (27 tests) 212ms
+ ✓ |unit| src/browser.test.ts (26 tests) 626ms
+stdout | extension/src/background.test.ts > background tab isolation > allows Accessibility.enable through the guarded CDP passthrough
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > allows Accessibility.enable through the guarded CDP passthrough
+[opencli] Created owned automation window 1 (start=about:blank)
+
+ ✓ |unit| src/weixin-download.test.ts (8 tests) 154ms
+ ✓ |unit| src/hooks-output.test.ts (37 tests) 159ms
+ ✓ |unit| src/browser/article-extract.e2e.test.ts (4 tests) 667ms
+     ✓ extracts a Wikipedia article fixture and keeps infobox/reference noise out of markdown  480ms
+ ✓ |unit| src/download/article-download.test.ts (23 tests) 92ms
+ ✓ |unit| src/execution.test.ts (43 tests) 110ms
+ ✓ |unit| src/download/media-download.test.ts (3 tests) 112ms
+ ✓ |unit| src/browser/find.test.ts (18 tests) 110ms
+stdout | extension/src/background.test.ts > background tab isolation > routes frame-target CDP passthrough calls through the iframe target
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > routes frame-target CDP passthrough calls through the iframe target
+[opencli] Created owned automation window 1 (start=about:blank)
+
+ ✓ |unit| src/download/index.test.ts (11 tests) 73ms
+ ✓ |unit| src/discovery.extra.test.ts (6 tests) 77ms
+ ✓ |unit| src/plugin.test.ts (73 tests) 105ms
+ ✓ |unit| src/update-check.register.test.ts (5 tests) 51ms
+# ⚠  [pipeline/template] sanitizeContext failed: Converting circular structure to JSON
+#     --> starting at object with constructor 'Object'
+#     --- property 'self' closes the circle. Returning {} for this branch. Likely cause: circular reference, Symbol, or other non-serializable value in pipeline context.
+ ✓ |unit| src/pipeline/template.test.ts (54 tests) 13ms
+ ✓ |unit| src/observation/trace-transport.test.ts (19 tests) 58ms
+ ✓ |unit| src/browser/bridge-readiness.test.ts (5 tests) 37ms
+ ✓ |unit| src/commands/auth.test.ts (11 tests) 18ms
+ ✓ |unit| src/utils.test.ts (24 tests) 18ms
+ ✓ |unit| src/browser/base-page.test.ts (44 tests) 15ms
+ ✓ |unit| src/launcher.test.ts (21 tests | 1 skipped) 14ms
+ ✓ |unit| src/browser/cdp-click-fixture.test.ts (2 tests) 73ms
+ ✓ |unit| src/observation/retention.test.ts (6 tests) 19ms
+ ✓ |unit| src/observation/artifact.test.ts (3 tests) 23ms
+ ✓ |unit| src/convention-audit.test.ts (9 tests) 28ms
+stdout | extension/src/background.test.ts > background tab isolation > routes wait-download commands to the download observer
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > routes exec frameIndex through the same cross-origin frame ordering as handleFrames
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > routes exec frameIndex through the same cross-origin frame ordering as handleFrames
+[opencli] Created owned automation window 1 (start=about:blank)
+
+ ✓ |unit| src/browser/extract.test.ts (13 tests) 11ms
+ ✓ |unit| src/adapter-source.test.ts (4 tests) 17ms
+ ✓ |unit| src/browser/daemon-client.test.ts (38 tests) 1526ms
+     ✓ sendCommand retries executor-transient errors ONCE with a NEW id (re-execution is a new logical attempt)  1502ms
+ ✓ |unit| src/pipeline/transform.test.ts (19 tests) 21ms
+ ✓ |unit| src/skills.test.ts (3 tests) 15ms
+# ⚠  Hook onBeforeExecute handler failed: boom
+#   name: Error
+#   code: UNKNOWN
+#   exitCode: 1
+# ⚠  Hook onAfterExecute handler failed: async boom
+#   name: Error
+#   code: UNKNOWN
+#   exitCode: 1
+ ✓ |unit| src/build-manifest.test.ts (13 tests) 20ms
+ ✓ |unit| src/hooks.test.ts (10 tests) 18ms
+ ✓ |unit| src/browser/article-extract.test.ts (9 tests) 19ms
+#   [1/1] unknownStep → test
+#   [1/1] unknownStep → test
+ ✓ |unit| src/pipeline/executor.test.ts (15 tests) 17ms
+ ✓ |unit| src/browser/network-cache.test.ts (9 tests) 9ms
+ ✓ |unit| src/plugin-scaffold.test.ts (7 tests) 11ms
+ ✓ |unit| src/plugin-manifest.test.ts (27 tests) 17ms
+ ✓ |unit| src/doctor.test.ts (20 tests) 10ms
+# ⚠  Batch fetch failed for https://api.example.com/items/1: HTTP 503 Service Unavailable from https://api.example.com/items/1
+# ⚠  Batch fetch failed for https://api.example.com/items/1: HTTP 503 Service Unavailable from https://api.example.com/items/1
+# ⚠  Batch fetch failed for https://api.example.com/items/1: socket hang up
+# ⚠  Batch fetch failed for https://api.example.com/items/1: socket hang up
+# ⚠  Batch fetch failed for https://api.example.com/items/1: HTTP 503 Service Unavailable from https://api.example.com/items/1
+# ⚠  Batch fetch failed for https://api.example.com/items/2: HTTP 503 Service Unavailable from https://api.example.com/items/2
+# ⚠  Batch fetch failed for https://api.example.com/items/1: HTTP 502 Bad Gateway from https://api.example.com/items/1
+# ⚠  Batch fetch failed for https://api.example.com/items/2: HTTP 502 Bad Gateway from https://api.example.com/items/2
+ ✓ |unit| src/pipeline/steps/fetch.test.ts (9 tests) 8ms
+ok: false
+error:
+  code: ARGUMENT
+  message: 'Argument "dry-run" must be a boolean (true/false). Received: "maybe"'
+  exitCode: 2
+error: option '--image <value>' argument missing
+ok: false
+error:
+  code: UNKNOWN
+  message: media required
+  exitCode: 1
+# AutoFix: re-run with --trace=retain-on-failure for trace artifact
+# opencli instagram post --trace retain-on-failure
+ ✓ |unit| src/commanderAdapter.test.ts (17 tests) 17ms
+ ✓ |unit| src/output.test.ts (8 tests) 10ms
+ ✓ |unit| src/public-error.test.ts (15 tests) 8ms
+stdout | extension/src/background.test.ts > background tab isolation > derives the CDP deadline from cmd.timeout for exec (timeout*1000 - 5s, floor 10s)
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > derives the CDP deadline from cmd.timeout for exec (timeout*1000 - 5s, floor 10s)
+[opencli] Created owned automation window 1 (start=about:blank)
+
+ ✓ |unit| src/browser/analyze.test.ts (20 tests) 4ms
+ ✓ |unit| src/help.test.ts (8 tests) 10ms
+ ✓ |unit| src/completion-fast.test.ts (5 tests) 5ms
+ ✓ |unit| src/snapshotFormatter.test.ts (33 tests) 9ms
+ ✓ |unit| src/cli-argv-preprocess.test.ts (35 tests) 4ms
+ ✓ |unit| src/logger.test.ts (13 tests) 12ms
+ ✓ |unit| src/browser/html-tree.test.ts (13 tests) 6ms
+ ✓ |unit| src/commands/daemon.test.ts (14 tests) 13ms
+ ✓ |unit| src/errors.test.ts (17 tests) 7ms
+ ✓ |unit| src/browser/verify-fixture.test.ts (34 tests) 7ms
+ ✓ |unit| src/browser/compound.test.ts (20 tests) 4ms
+ ✓ |unit| src/session-lease.test.ts (22 tests) 5ms
+ ✓ |unit| src/browser/dom-snapshot.test.ts (33 tests) 8ms
+ ✓ |unit| src/browser/profile.test.ts (6 tests) 9ms
+ ✓ |unit| src/runtime-core.test.ts (7 tests) 5ms
+ ✓ |unit| src/download/progress.test.ts (5 tests) 7ms
+ ✓ |unit| src/adapter-shadow.test.ts (2 tests) 4ms
+ ✓ |unit| src/browser/target-resolver.test.ts (22 tests) 9ms
+stdout | extension/src/background.test.ts > background tab isolation > creates new tabs inside the automation container
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses the initial container tab for first tab-new lease instead of leaving a blank tab
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses the initial container tab for first tab-new lease instead of leaving a blank tab
+[opencli] Created owned interactive window 1 (start=https://first.example)
+
+ ✓ |unit| src/browser/stealth.test.ts (18 tests) 4ms
+ ✓ |unit| src/pipeline/steps/download.test.ts (2 tests) 8ms
+ ✓ |unit| src/browser/shape.test.ts (10 tests) 6ms
+ ✓ |unit| src/browser/target-errors.test.ts (8 tests) 5ms
+ ✓ |unit| src/browser/cdp.test.ts (3 tests) 4ms
+ ✓ |unit| src/electron-apps.test.ts (11 tests) 7ms
+ ✓ |unit| src/validate.test.ts (3 tests) 4ms
+ ✓ |unit| src/registry.test.ts (21 tests) 6ms
+ ✓ |unit| src/node-network.test.ts (8 tests) 4ms
+ ✓ |unit| src/dependency-lock.test.ts (1 test) 6ms
+ ✓ |unit| src/browser/network-request.test.ts (4 tests) 6ms
+ ✓ |unit| src/browser/ax-snapshot.test.ts (4 tests) 4ms
+ ✓ |unit| src/capabilityRouting.test.ts (7 tests) 2ms
+ ✓ |unit| src/update-check.test.ts (16 tests) 4ms
+ ✓ |unit| src/browser/network-key.test.ts (6 tests) 4ms
+ ✓ |unit| src/extension-manifest-regression.test.ts (1 test) 4ms
+stdout | extension/src/background.test.ts > background tab isolation > closes a tab by page identity
+[opencli] OpenCLI extension initialized
+
+ ✓ |unit| src/browser/utils.test.ts (5 tests) 6ms
+stdout | extension/src/background.test.ts > background tab isolation > closes an exact non-preferred owned page without releasing the preferred lease
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > rejects an exact cross-window page without closing the preferred page
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > rejects an exact stale page without closing the preferred page
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps legacy implicit close bound to the preferred page
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps legacy implicit close bound to the preferred page
+[opencli] Released owned tab lease 1 as reusable placeholder (session=twitter, surface=adapter, tab close)
+
+stdout | extension/src/background.test.ts > background tab isolation > selecting an exact owned page restores it as the preferred lease target
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > treats normalized same-url navigate as already complete
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > treats normalized same-url navigate as already complete
+[opencli] Created owned automation window 1 (start=https://www.bilibili.com)
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps the debugger attached during navigation when network capture is active
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps the debugger attached during navigation when network capture is active
+[opencli] Created owned automation window 1 (start=https://eos.douyin.com/livesite/live/current)
+
+ ✓ |unit| src/browser/errors.test.ts (8 tests) 6ms
+ ✓ |unit| src/browser/shape-filter.test.ts (20 tests) 7ms
+ ✓ |unit| src/embedded-runtime.test.ts (6 tests) 3ms
+ ✓ |unit| src/runtime-detect.test.ts (6 tests) 3ms
+ ✓ |unit| src/serialization.test.ts (4 tests) 3ms
+ ✓ |unit| src/daemon.test.ts (14 tests) 3ms
+ ✓ |unit| src/interceptor.test.ts (11 tests) 5ms
+ ✓ |unit| src/observation/redaction.test.ts (3 tests) 4ms
+ ✓ |unit| src/observation/ring-buffer.test.ts (2 tests) 3ms
+ ✓ |unit| src/completion.test.ts (2 tests) 4ms
+ ✓ |unit| src/observation/manager.test.ts (1 test) 3ms
+ ✓ |unit| src/tui.test.ts (3 tests) 2ms
+ ✓ |unit| src/autoresearch-run.test.ts (1 test) 2ms
+ ✓ |unit| src/runtime.test.ts (2 tests) 2ms
+stdout | extension/src/background.test.ts > background tab isolation > keeps hash routes distinct when comparing target URLs
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > returns the persisted profile contextId from popup status
+[opencli] OpenCLI extension initialized
+
+ ✓ |unit| src/ctrip-limit-args.test.ts (1 test) 2ms
+stdout | extension/src/background.test.ts > background tab isolation > keeps the active daemon connection when a superseded WebSocket closes later
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > coalesces concurrent daemon connection attempts while the probe is in flight
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > uses the production-safe 30s keepalive alarm period
+[opencli] OpenCLI extension initialized
+
+stderr | extension/src/background.test.ts > background tab isolation > uses the production-safe 30s keepalive alarm period
+[opencli] daemon ping failed: HTTP undefined
+
+stdout | extension/src/background.test.ts > background tab isolation > reconnect delay backs off exponentially with a 15s cap and resets on success
+[opencli] OpenCLI extension initialized
+
+stderr | extension/src/background.test.ts > background tab isolation > reconnect delay backs off exponentially with a 15s cap and resets on success
+[opencli] daemon ping failed: HTTP undefined
+
+stdout | extension/src/background.test.ts > background tab isolation > a successful daemon ping resets the backoff before the WebSocket attempt
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > pings without credentials and logs a non-OK status instead of swallowing it
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores daemon commands delivered to a superseded WebSocket
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > can execute concurrently on two pages in the same session
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > can execute concurrently across two sessions in the shared container window
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > can execute concurrently across two sessions in the shared container window
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned sessions without closing the shared container
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned sessions without closing the shared container
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned sessions without closing the shared container
+[opencli] Released owned tab lease 10 (session=second, surface=adapter, explicit close)
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned sessions without closing the shared container
+[opencli] Released owned tab lease 1 as reusable placeholder (session=first, surface=adapter, explicit close)
+
+stdout | extension/src/background.test.ts > background tab isolation > releases the current owned tab lease when tabs close targets it
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > releases the current owned tab lease when tabs close targets it
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > releases the current owned tab lease when tabs close targets it
+[opencli] Released owned tab lease 1 as reusable placeholder (session=twitter, surface=adapter, tab close)
+
+stdout | extension/src/background.test.ts > background tab isolation > reconciles an owned adapter container with no stored leases without closing it or grouping new tabs
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > restores owned and borrowed leases from the registry
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > honors the persisted remaining idle lifetime on reconcile instead of granting a fresh full timeout
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned leases from the idle alarm path
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned leases from the idle alarm path
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > releases owned leases from the idle alarm path
+[opencli] Released owned tab lease 1 as reusable placeholder (session=alarm, surface=adapter, idle alarm)
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses the placeholder tab left by an idle release
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses the placeholder tab left by an idle release
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses the placeholder tab left by an idle release
+[opencli] Released owned tab lease 1 as reusable placeholder (session=first, surface=adapter, idle alarm)
+
+stdout | extension/src/background.test.ts > background tab isolation > deduplicates concurrent automation container creation
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > deduplicates concurrent automation container creation
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > does not create a visible tab group for adapter automation windows
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > does not create a visible tab group for adapter automation windows
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps browser groups while adapter sessions stay ungrouped in separate owned windows
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps browser groups while adapter sessions stay ungrouped in separate owned windows
+[opencli] Created owned interactive window 20 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps browser groups while adapter sessions stay ungrouped in separate owned windows
+[opencli] Created owned automation window 21 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > lets adapters explicitly request a foreground automation window
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > lets adapters explicitly request a foreground automation window
+[opencli] Created owned automation window 30 (start=https://x.com)
+
+stdout | extension/src/background.test.ts > background tab isolation > creates additional adapter lease tabs in the owned window without grouping them
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > creates additional adapter lease tabs in the owned window without grouping them
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses a persisted adapter window after worker restart without recreating an adapter group
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > reuses a restored adapter preferred tab when no adapter group exists after worker restart
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores legacy OpenCLI Adapter groups when choosing an adapter container
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores legacy OpenCLI Adapter groups when choosing an adapter container
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > does not reuse a user http tab from an adapter-owned window without an owned lease signal
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > does not group borrowed user tabs for bound sessions
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > does not group borrowed user tabs for bound sessions
+[opencli] Session default explicitly bound to tab 2 (https://user.example)
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps adapter:notebooklm inside its owned automation lease instead of rebinding to a user tab
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps adapter:notebooklm inside its owned automation lease instead of rebinding to a user tab
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > moves drifted legacy tab back to its automation container instead of creating a new one
+[opencli] OpenCLI extension initialized
+
+stderr | extension/src/background.test.ts > background tab isolation > moves drifted legacy tab back to its automation container instead of creating a new one
+[opencli] Tab 1 drifted to window 2, moving back to 1
+
+stdout | extension/src/background.test.ts > background tab isolation > falls through to re-resolve when drifted tab move fails
+[opencli] OpenCLI extension initialized
+
+stderr | extension/src/background.test.ts > background tab isolation > falls through to re-resolve when drifted tab move fails
+[opencli] Tab 1 drifted to window 2, moving back to 1
+
+stderr | extension/src/background.test.ts > background tab isolation > falls through to re-resolve when drifted tab move fails
+[opencli] Failed to move tab back: Error: Cannot move tab
+
+stdout | extension/src/background.test.ts > background tab isolation > falls through to re-resolve when drifted tab move fails
+[opencli] Created owned automation window 1 (start=about:blank)
+
+stdout | extension/src/background.test.ts > background tab isolation > does not fall back from an owned session to a user http tab in the same window
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > idle timeout releases the automation lease for adapter:notebooklm
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > idle timeout releases the automation lease for adapter:notebooklm
+[opencli] Released legacy owned window lease 1 without closing container (session=twitter, surface=adapter, idle timeout)
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps persistent adapter site sessions alive across adapter idle timeout
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps persistent adapter site sessions alive across adapter idle timeout
+[opencli] Created owned automation window 1 (start=https://chatgpt.com/)
+
+stdout | extension/src/background.test.ts > background tab isolation > uses 10-minute timeout for browser:* sessions
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > uses 10-minute timeout for browser:* sessions
+[opencli] Released legacy owned window lease 1 without closing container (session=default, surface=browser, idle timeout)
+
+stdout | extension/src/background.test.ts > background tab isolation > clears session overrides on idle expiry
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > clears session overrides on idle expiry
+[opencli] Released legacy owned window lease 1 without closing container (session=default, surface=browser, idle timeout)
+
+stdout | extension/src/background.test.ts > background tab isolation > clears session overrides on explicit close
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > clears session overrides on explicit close
+[opencli] Released legacy owned window lease 1 without closing container (session=default, surface=browser, explicit close)
+
+stdout | extension/src/background.test.ts > background tab isolation > applies idleTimeout from command to session override
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > clears session overrides when user manually closes the automation container
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > clears session overrides when user manually closes the automation container
+[opencli] browser container closed (session=default)
+
+stdout | extension/src/background.test.ts > background tab isolation > bind does not reach into background windows when the current window has no match
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > bind attaches the current tab to the named browser session
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > bind attaches the current tab to the named browser session
+[opencli] Session default explicitly bound to tab 2 (https://user.example)
+
+stdout | extension/src/background.test.ts > background tab isolation > rebind releases an owned browser lease before binding the current user tab
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > rebind releases an owned browser lease before binding the current user tab
+[opencli] Released legacy owned window lease 1 without closing container (session=default, surface=browser, rebind)
+
+stdout | extension/src/background.test.ts > background tab isolation > rebind releases an owned browser lease before binding the current user tab
+[opencli] Session default explicitly bound to tab 2 (https://user.example)
+
+stdout | extension/src/background.test.ts > background tab isolation > keeps borrowed bound sessions alive without closing the user window on idle
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > explicit close on a borrowed bound session detaches without touching tabs or windows
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > explicit close on a borrowed bound session detaches without touching tabs or windows
+[opencli] Detached borrowed tab lease 2 (session=default, surface=browser, explicit close)
+
+stdout | extension/src/background.test.ts > background tab isolation > cleans borrowed sessions when the bound tab is closed
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > cleans borrowed sessions when the bound tab is closed
+[opencli] Session default detached from tab 2 (tab closed)
+
+stdout | extension/src/background.test.ts > background tab isolation > fails closed when a borrowed bound tab is gone instead of creating an automation lease
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > fails closed when a borrowed bound tab is no longer debuggable
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > allows navigation but blocks tab mutation on borrowed sessions
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > does not wipe the persisted registry when a lease idle alarm fires before recovery
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > does not wipe the persisted registry when a lease idle alarm fires before recovery
+[opencli] Released owned tab lease 1 as reusable placeholder (session=twitter, surface=adapter, idle alarm)
+
+stdout | extension/src/background.test.ts > background tab isolation > does not wipe the persisted registry when tabs.onRemoved fires before recovery
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > adopts an untitled orphan group through the session ledger instead of creating a new one
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > prunes a vanished group id from the session ledger on convergence
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores legacy groupIds persisted in the local registry so a recycled id cannot hijack a user group
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores a legacy interactive groupId persisted in the local registry so a recycled id cannot hijack a user group
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores legacy container windowIds persisted in the local registry so recycled ids cannot claim user windows
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores legacy container windowIds persisted in the local registry so recycled ids cannot claim user windows
+[opencli] Created owned automation window 1 (start=https://work.example)
+
+stdout | extension/src/background.test.ts > background tab isolation > ignores a legacy lease persisted in the local registry so a recycled tab id cannot capture a user tab
+[opencli] OpenCLI extension initialized
+
+stdout | extension/src/background.test.ts > background tab isolation > removes the legacy storage.local registry key on startup reconcile
+[opencli] OpenCLI extension initialized
+
+ ✓ |extension| extension/src/background.test.ts (77 tests) 7503ms
+     ✓ lists cross-origin frames in the same order exposed by snapshot [F#] markers  308ms
+     ✓ routes structured command session and surface fields without encoded lease keys  307ms
+     ✓ does not route encoded adapter lease keys through the command session backdoor  310ms
+     ✓ allows Accessibility.enable through the guarded CDP passthrough  307ms
+     ✓ routes frame-target CDP passthrough calls through the iframe target  308ms
+     ✓ routes exec frameIndex through the same cross-origin frame ordering as handleFrames  307ms
+     ✓ derives the CDP deadline from cmd.timeout for exec (timeout*1000 - 5s, floor 10s)  307ms
+     ✓ reuses the initial container tab for first tab-new lease instead of leaving a blank tab  308ms
+     ✓ keeps the debugger attached during navigation when network capture is active  310ms
+     ✓ can execute concurrently across two sessions in the shared container window  338ms
+     ✓ releases owned sessions without closing the shared container  307ms
+     ✓ releases the current owned tab lease when tabs close targets it  305ms
+     ✓ releases owned leases from the idle alarm path  304ms
+     ✓ reuses the placeholder tab left by an idle release  608ms
+     ✓ does not create a visible tab group for adapter automation windows  309ms
+     ✓ creates additional adapter lease tabs in the owned window without grouping them  306ms
+     ✓ ignores legacy OpenCLI Adapter groups when choosing an adapter container  306ms
+     ✓ keeps adapter:notebooklm inside its owned automation lease instead of rebinding to a user tab  306ms
+     ✓ falls through to re-resolve when drifted tab move fails  304ms
+     ✓ ignores legacy container windowIds persisted in the local registry so recycled ids cannot claim user windows  304ms
+
+  提交上传...
+  上传已提交: canonical-video-id
+  创建定时发布...
+
+  提交上传...
+  上传已提交: canonical-video-id
+  创建定时发布...
+
+  提交上传...
+  上传已提交: canonical-video-id
+ ✓ |adapter| clis/trip/trip.test.js (122 tests) 480ms
+ ✓ |adapter| clis/xiaohongshu/search.test.js (64 tests) 827ms
+     ✓ converges reused-tab state for filtered -> default and filter set A -> B  341ms
+ ✓ |adapter| clis/chatgpt/utils.test.js (119 tests) 837ms
+# ⚠  Browser Bridge reported video/mp4 for /var/folders/zl/whmz_0jn6zs38684l9yq9nyh0000gn/T/opencli-midjourney-rendered-wotTRc/browser-download.gif; detected image/gif from file bytes
+ ✓ |adapter| clis/midjourney/utils.test.js (24 tests) 429ms
+   ✓ raw-video downloads cross the browser bridge in bounded chunks  374ms
+  内容安全预检接口无响应，继续轮询检测结果。
+  创建定时发布...
+
+  提交上传...
+  上传已提交: canonical-video-id
+  创建定时发布...
+
+  提交上传...
+  上传已提交: canonical-video-id
+ ✓ |adapter| clis/douyin/publish-upload-id.test.js (5 tests) 1597ms
+     ✓ continues to create_v2 when the legacy fast detect API returns an empty response  1504ms
+ ✓ |adapter| clis/trae-cn/trae-cn.test.js (23 tests) 1211ms
+     ✓ new fails closed when clicking new task does not prove a fresh empty composer  1000ms
+ ✓ |adapter| clis/semanticscholar/semanticscholar.test.js (23 tests) 1532ms
+     ✓ retries once on 429 when no API key is configured  1501ms
+ ✓ |adapter| clis/qwen/utils.test.js (10 tests) 572ms
+ ✓ |adapter| clis/slock/site-session-canary.test.js (1 test) 228ms
+ ✓ |adapter| clis/ctrip/ctrip.test.js (171 tests) 281ms
+ ✓ |adapter| clis/xiaohongshu/ask.test.js (17 tests) 2014ms
+     ✓ uses the known module id when the build still has it  1002ms
+     ✓ still finds the store after Xiaohongshu renumbers the chunk  1002ms
+ ✓ |adapter| clis/gemini/models.test.js (28 tests) 335ms
+ ✓ |adapter| clis/google/images.test.js (16 tests) 407ms
+ ✓ |adapter| clis/gemini/utils.test.js (51 tests) 455ms
+ ✓ |adapter| clis/instagram/instagram.test.js (29 tests) 2429ms
+     ✓ paginates across multiple pages via next_max_id cursor  802ms
+     ✓ deduplicates users by pk when cursor overlaps  402ms
+     ✓ breaks when next_max_id repeats (cursor loop guard)  402ms
+     ✓ breaks when a page yields zero new unique users  402ms
+     ✓ propagates HTTP errors that occur on a mid-pagination page  402ms
+ ✓ |adapter| clis/gemini/image-pipeline.test.js (17 tests) 336ms
+ ✓ |adapter| clis/instagram/_shared/post-like.test.js (22 tests) 281ms
+ ✓ |adapter| clis/dribbble/dribbble.test.js (21 tests) 387ms
+ ✓ |adapter| clis/jd/item.test.ts (21 tests) 290ms
+ ✓ |adapter| clis/xianyu/im.test.js (9 tests) 290ms
+ ✓ |adapter| clis/facebook/feed.test.js (14 tests) 195ms
+ ✓ |adapter| clis/discord-app/commands.test.js (31 tests) 196ms
+ ✓ |adapter| clis/doubao/utils.test.js (29 tests) 309ms
+ ✓ |adapter| clis/jd/item.test.js (18 tests) 269ms
+ ✓ |adapter| clis/smzdm/search.test.js (8 tests) 162ms
+ ✓ |adapter| clis/kimi/kimi.test.js (12 tests) 228ms
+ ✓ |adapter| clis/twitter/mute-word.test.js (13 tests) 375ms
+ ✓ |adapter| clis/xianyu/chat.test.js (6 tests) 253ms
+ ✓ |adapter| clis/web/read.test.js (16 tests) 282ms
+ ✓ |adapter| clis/facebook/notifications.test.js (39 tests) 318ms
+ ✓ |adapter| clis/twitter/reply.test.js (21 tests) 266ms
+ ✓ |adapter| clis/slock/in-page.test.js (22 tests) 184ms
+ ✓ |adapter| clis/facebook/search.test.js (12 tests) 157ms
+ ✓ |adapter| clis/dianping/dianping.test.js (28 tests) 204ms
+ ✓ |adapter| clis/twitter/shared.test.js (75 tests) 228ms
+ ✓ |adapter| clis/xiaoe/xiaoe.test.js (46 tests) 214ms
+ ✓ |adapter| clis/huodongxing/events.test.js (16 tests) 179ms
+ ✓ |adapter| clis/xiaohongshu/comments.test.js (29 tests) 220ms
+ ✓ |adapter| clis/qoder/qoder.test.js (7 tests) 183ms
+ ✓ |adapter| clis/linkedin/sent-invitations.test.js (2 tests) 82ms
+ ✓ |adapter| clis/xiaohongshu/publish.test.js (32 tests) 124ms
+ ✓ |adapter| clis/twitter/hide-reply.test.js (7 tests) 140ms
+ ✓ |adapter| clis/twitter/block.test.js (8 tests) 136ms
+ ✓ |adapter| clis/xiaohongshu/download.test.js (15 tests) 161ms
+ ✓ |adapter| clis/linkedin/connect.test.js (20 tests) 139ms
+ ✓ |adapter| clis/gov-policy/gov-policy.test.js (8 tests) 120ms
+ ✓ |adapter| clis/xiaohongshu/note.test.js (28 tests) 143ms
+ ✓ |adapter| clis/1point3acres/auth.test.js (4 tests) 116ms
+ ✓ |adapter| clis/chatwise/composer.test.js (8 tests) 141ms
+ ✓ |adapter| clis/facebook/profile.test.js (4 tests) 109ms
+ ✓ |adapter| clis/twitter/post.test.js (29 tests) 152ms
+ ✓ |adapter| clis/hupu/hot.test.js (17 tests) 167ms
+ ✓ |adapter| clis/twitter/like.test.js (6 tests) 137ms
+ ✓ |adapter| clis/1688/assets.test.js (5 tests) 154ms
+ ✓ |adapter| clis/xianyu/publish.test.js (11 tests) 175ms
+ ✓ |adapter| clis/duckduckgo/search.test.js (9 tests) 105ms
+ ✓ |adapter| clis/twitter/unblock.test.js (5 tests) 118ms
+ ✓ |adapter| clis/zhihu/download.test.js (16 tests) 116ms
+ ✓ |adapter| clis/twitter/retweet.test.js (5 tests) 127ms
+ ✓ |adapter| clis/douban/auth.test.js (5 tests) 109ms
+ ✓ |adapter| clis/twitter/delete.test.js (6 tests) 104ms
+ ✓ |adapter| clis/zhihu/target.test.js (14 tests) 4ms
+ ✓ |adapter| clis/instagram/post.test.js (43 tests) 73ms
+ ✓ |adapter| clis/confluence/commands.test.js (8 tests) 50ms
+ ✓ |adapter| clis/boss/detail.test.js (5 tests) 146ms
+ ✓ |adapter| clis/instagram/_shared/private-publish.test.js (21 tests) 41ms
+ ✓ |adapter| clis/aibase/news.test.js (4 tests) 116ms
+ ✓ |adapter| clis/linkedin/people-search.test.js (20 tests) 121ms
+ ✓ |adapter| clis/gemini/ask.test.js (65 tests) 44ms
+ ✓ |adapter| clis/jira/commands.test.js (22 tests) 49ms
+ ✓ |adapter| clis/minimax/music.test.js (23 tests) 50ms
+ ✓ |adapter| clis/uisdc/news.test.js (4 tests) 115ms
+ ✓ |adapter| clis/xiaohongshu/delete-note.test.js (13 tests) 111ms
+ ✓ |adapter| clis/youtube/search.test.js (30 tests) 31ms
+ ✓ |adapter| clis/toutiao/toutiao.test.js (56 tests) 32ms
+ ✓ |adapter| clis/weixin/download.test.js (22 tests) 4ms
+ ✓ |adapter| clis/openreview/openreview.test.js (31 tests) 30ms
+ ✓ |adapter| clis/dblp/dblp.test.js (43 tests) 28ms
+ ✓ |adapter| clis/archive/archive.test.js (18 tests) 34ms
+ ✓ |adapter| clis/stackoverflow/stackoverflow.test.js (23 tests) 31ms
+ ✓ |adapter| clis/pixiv/bookmark-download.test.js (12 tests) 24ms
+ ✓ |adapter| clis/12306/utils.test.js (48 tests) 38ms
+ ✓ |adapter| clis/nuget/nuget.test.js (9 tests) 30ms
+ ✓ |adapter| clis/osv/osv.test.js (7 tests) 27ms
+ ✓ |adapter| clis/juejin/juejin.test.js (17 tests) 25ms
+ ✓ |adapter| clis/doubao/history.test.js (1 test) 4ms
+ ✓ |adapter| clis/rfc/rfc.test.js (5 tests) 20ms
+ ✓ |adapter| clis/devto/devto.test.js (17 tests) 28ms
+ ✓ |adapter| clis/defillama/defillama.test.js (7 tests) 24ms
+ ✓ |adapter| clis/_atlassian/shared.test.js (10 tests) 35ms
+ ✓ |adapter| clis/boss/chatmsg.test.js (11 tests) 22ms
+ ✓ |adapter| clis/wttr/wttr.test.js (6 tests) 23ms
+ ✓ |adapter| clis/binance/commands.test.js (3 tests) 22ms
+ ✓ |adapter| clis/linkedin/company.test.js (7 tests) 5ms
+ ✓ |adapter| clis/manus/manus.test.js (25 tests) 27ms
+ ✓ |adapter| clis/hackernews/hackernews.test.js (13 tests) 22ms
+ ✓ |adapter| clis/xiaoyuzhou/auth.test.js (10 tests) 22ms
+ ✓ |adapter| clis/boss/chatlist.test.js (11 tests) 23ms
+ ✓ |adapter| clis/douyin/videos.test.js (9 tests) 21ms
+ ✓ |adapter| clis/eastmoney/convertible.test.js (6 tests) 7ms
+ ✓ |adapter| clis/weibo/user-posts.test.js (6 tests) 18ms
+ ✓ |adapter| clis/oeis/oeis.test.js (7 tests) 28ms
+ ✓ |adapter| clis/mercury/mercury.test.js (15 tests) 22ms
+ ✓ |adapter| clis/goproxy/goproxy.test.js (8 tests) 27ms
+ ✓ |adapter| clis/lichess/lichess.test.js (7 tests) 25ms
+ ✓ |adapter| clis/coingecko/coingecko.test.js (5 tests) 22ms
+ ✓ |adapter| clis/openfda/openfda.test.js (8 tests) 20ms
+ ✓ |adapter| clis/twitter/bookmarks.test.js (17 tests) 18ms
+ ✓ |adapter| clis/lobsters/lobsters.test.js (13 tests) 21ms
+ ✓ |adapter| clis/tieba/utils.test.js (12 tests) 23ms
+ ✓ |adapter| clis/endoflife/endoflife.test.js (4 tests) 28ms
+ ✓ |adapter| clis/wikidata/wikidata.test.js (7 tests) 26ms
+ ✓ |adapter| clis/flathub/flathub.test.js (7 tests) 23ms
+ ✓ |adapter| clis/youtube/history.test.js (18 tests) 22ms
+ ✓ |adapter| clis/linux-do/topic-content.test.js (4 tests) 26ms
+ ✓ |adapter| clis/instagram/_shared/protocol-capture.test.js (8 tests) 28ms
+ ✓ |adapter| clis/instagram/reel.test.js (6 tests) 10ms
+ ✓ |adapter| clis/tvmaze/tvmaze.test.js (7 tests) 28ms
+ ✓ |adapter| clis/gitee/user.test.js (3 tests) 24ms
+ ✓ |adapter| clis/rest-countries/rest-countries.test.js (7 tests) 23ms
+ ✓ |adapter| clis/linkedin/services-read.test.js (7 tests) 6ms
+ ✓ |adapter| clis/tiktok/creator-videos.test.js (6 tests) 19ms
+ ✓ |adapter| clis/paperreview/commands.test.js (6 tests) 20ms
+ ✓ |adapter| clis/twitter/likes.test.js (15 tests) 18ms
+ ✓ |adapter| clis/nowcoder/posts.test.js (5 tests) 19ms
+ ✓ |adapter| clis/pinterest/board-update.test.js (8 tests) 7ms
+ ✓ |adapter| clis/pubmed/pubmed.test.js (27 tests) 24ms
+ ✓ |adapter| clis/douyin/_shared/tos-upload.test.js (25 tests) 27ms
+ ✓ |adapter| clis/grok/image.test.ts (9 tests) 5ms
+ ✓ |adapter| clis/reddit/read.test.js (19 tests) 12ms
+ ✓ |adapter| clis/linux-do/format.test.js (5 tests) 19ms
+ ✓ |adapter| clis/twitter/following.test.js (24 tests) 13ms
+ ✓ |adapter| clis/instagram/user.test.js (2 tests) 18ms
+ ✓ |adapter| clis/upwork/upwork.test.js (49 tests) 18ms
+ ✓ |adapter| clis/zhihu/write-shared.test.js (14 tests) 13ms
+ ✓ |adapter| clis/claude/utils.test.js (12 tests) 28ms
+ ✓ |adapter| clis/douyin/draft.test.js (10 tests) 12ms
+ ✓ |adapter| clis/pixiv/novel-download.test.js (9 tests) 15ms
+ ✓ |adapter| clis/claude/ask.test.js (16 tests) 8ms
+ ✓ |adapter| clis/chess/analyze.test.js (7 tests) 19ms
+ ✓ |adapter| clis/douyin/_shared/vod-upload.test.js (5 tests) 20ms
+ ✓ |adapter| clis/paperreview/utils.test.js (7 tests) 30ms
+ ✓ |adapter| clis/tiktok/refactor.test.js (32 tests) 24ms
+ ✓ |adapter| clis/deepseek/utils.test.js (24 tests) 11ms
+ ✓ |adapter| clis/yahoo/search.test.js (8 tests) 9ms
+ ✓ |adapter| clis/chatgpt/commands.test.js (17 tests) 15ms
+ ✓ |adapter| clis/weixin/drafts.test.js (13 tests) 27ms
+ ✓ |adapter| clis/instagram/download.test.js (22 tests) 20ms
+ ✓ |adapter| clis/codex/sidebar.test.js (34 tests) 17ms
+ ✓ |adapter| clis/weread-official/commands.test.js (22 tests) 16ms
+# ⚠  WeRead private API auth expired; showing cached shelf data from localStorage. Results may be stale, and detail commands may still require re-login.
+# ⚠  WeRead private API auth expired; showing cached shelf data from localStorage. Results may be stale, and detail commands may still require re-login.
+ ✓ |adapter| clis/weread/private-api-regression.test.js (13 tests) 14ms
+ ✓ |adapter| clis/indeed/indeed.test.js (29 tests) 9ms
+ ✓ |adapter| clis/xiaohongshu/follow.test.js (20 tests) 8ms
+ ✓ |adapter| clis/yuanbao/shared.test.js (11 tests) 5ms
+ ✓ |adapter| clis/xueqiu/comments.test.js (42 tests) 14ms
+ ✓ |adapter| clis/gmail/utils.test.js (13 tests) 17ms
+ ✓ |adapter| clis/twitter/quote.test.js (10 tests) 13ms
+ ✓ |adapter| clis/douyin/delete.test.js (7 tests) 11ms
+ ✓ |adapter| clis/rednote/rednote.test.js (17 tests) 12ms
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > surfaces detail_error="no url" when row has no URL (instead of silent empty string)
+[opencli:linkedin] Fetching details 1/1: No URL Job
+[opencli:linkedin] Skipping detail for "No URL Job": no url
+
+ ✓ |adapter| clis/tiktok/write-refactor.test.js (26 tests) 16ms
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > surfaces detail_error="fetch failed: ..." when goto throws (no silent swallow)
+[opencli:linkedin] Fetching details 1/1: Fetch Fail
+
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > surfaces detail_error="fetch failed: ..." when goto throws (no silent swallow)
+[opencli:linkedin] Detail fetch failed for https://www.linkedin.com/jobs/view/1: fetch failed: network down
+
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > surfaces detail_error="missing description" on empty description (signals upstream gap, not crash)
+[opencli:linkedin] Fetching details 1/1: Empty Desc
+
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > surfaces detail_error=null on a fully successful enrichment
+[opencli:linkedin] Fetching details 1/1: OK
+
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > processes multiple rows with mixed outcomes without aborting the batch
+[opencli:linkedin] Fetching details 1/3: A
+
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > processes multiple rows with mixed outcomes without aborting the batch
+[opencli:linkedin] Fetching details 2/3: B
+[opencli:linkedin] Skipping detail for "B": no url
+[opencli:linkedin] Fetching details 3/3: C
+
+stderr | clis/linkedin/search.test.js > linkedin enrichJobDetails (silent failure fix) > throws AuthRequiredError on detail auth wall instead of burying it in detail_error
+[opencli:linkedin] Fetching details 1/1: Needs Auth
+
+ ✓ |adapter| clis/linkedin/search.test.js (19 tests) 13ms
+ ✓ |adapter| clis/twitter/download.test.js (17 tests) 13ms
+ ✓ |adapter| clis/gemini/commands.test.js (18 tests) 10ms
+ ✓ |adapter| clis/weread/search-regression.test.js (11 tests) 12ms
+ ✓ |adapter| clis/weread/commands.test.js (12 tests) 10ms
+ ✓ |adapter| clis/grok/export.test.js (15 tests) 12ms
+ ✓ |adapter| clis/zhihu/answer-comments.test.js (13 tests) 11ms
+ ✓ |adapter| clis/suno/generate.test.js (17 tests) 7ms
+ ✓ |adapter| clis/notebooklm/generate-slides.test.js (8 tests) 5ms
+ ✓ |adapter| clis/twitter/device-follow.test.js (24 tests) 8ms
+ ✓ |adapter| clis/douban/utils.test.js (21 tests) 13ms
+ ✓ |adapter| clis/twitter/tweets.test.js (19 tests) 16ms
+ ✓ |adapter| clis/booking/booking.test.js (35 tests) 9ms
+ ✓ |adapter| clis/notebooklm/add-source.test.js (13 tests) 8ms
+ ✓ |adapter| clis/notebooklm/utils.test.js (36 tests) 11ms
+ ✓ |adapter| clis/twitter/archive.test.js (7 tests) 13ms
+ ✓ |adapter| clis/yuanbao/ask.test.js (13 tests) 17ms
+ ✓ |adapter| clis/twitter/list-add.test.js (8 tests) 7ms
+ ✓ |adapter| clis/trae-solo/trae-solo.test.js (4 tests) 5ms
+ ✓ |adapter| clis/slock/bookmark-add.test.js (3 tests) 4ms
+ ✓ |adapter| clis/slock/server-list.test.js (1 test) 7ms
+ ✓ |adapter| clis/gemini/reply-state.test.js (18 tests) 14ms
+ ✓ |adapter| clis/jike/search.test.js (18 tests) 9ms
+ ✓ |adapter| clis/linkedin/salesnav-message.test.js (10 tests) 9ms
+ ✓ |adapter| clis/pinterest/search-users.test.js (3 tests) 6ms
+ ✓ |adapter| clis/twitter/collection.test.js (10 tests) 12ms
+ ✓ |adapter| clis/jike/notifications.test.js (18 tests) 6ms
+ ✓ |adapter| clis/suno/download.test.js (12 tests) 9ms
+ ✓ |adapter| clis/slock/attachment-upload.test.js (7 tests) 11ms
+ ✓ |adapter| clis/amazon/discussion.test.js (8 tests) 9ms
+ ✓ |adapter| clis/pixiv/bookmarks.test.js (9 tests) 7ms
+ ✓ |adapter| clis/pinterest/pin-create.test.js (9 tests) 8ms
+ ✓ |adapter| clis/bilibili/follow.test.js (20 tests) 7ms
+ ✓ |adapter| clis/instagram/story.test.js (6 tests) 14ms
+ ✓ |adapter| clis/slock/server-override-canary.test.js (2 tests) 7ms
+ ✓ |adapter| clis/bilibili/video.test.js (17 tests) 12ms
+ ✓ |adapter| clis/deepseek/ask.test.js (16 tests) 10ms
+ ✓ |adapter| clis/dongchedi/dongchedi.test.js (17 tests) 9ms
+ ✓ |adapter| clis/douyin/hashtag.test.js (20 tests) 7ms
+ ✓ |adapter| clis/twitter/bookmark-folder.test.js (20 tests) 6ms
+ ✓ |adapter| clis/pinterest/board-section-create.test.js (7 tests) 8ms
+ ✓ |adapter| clis/reddit/subreddit-info.test.js (12 tests) 9ms
+ ✓ |adapter| clis/weread-official/utils.test.js (23 tests) 9ms
+ ✓ |adapter| clis/zhihu/answer-detail.test.js (20 tests) 10ms
+ ✓ |adapter| clis/douyin/_shared/browser-fetch.test.js (17 tests) 10ms
+ ✓ |adapter| clis/xiaohongshu/creator-note-detail.test.js (10 tests) 10ms
+ ✓ |adapter| clis/youdao/note.test.js (9 tests) 11ms
+ ✓ |adapter| clis/weixin/search.test.js (10 tests) 10ms
+ ✓ |adapter| clis/github-trending/repos.test.js (11 tests) 9ms
+ ✓ |adapter| clis/slock/message-send.test.js (15 tests) 10ms
+ ✓ |adapter| clis/douyin/_shared/imagex-upload.test.js (4 tests) 9ms
+ ✓ |adapter| clis/reuters/reuters.test.js (33 tests) 12ms
+ ✓ |adapter| clis/notebooklm/rpc.test.js (9 tests) 11ms
+ ✓ |adapter| clis/twitter/auth.test.js (12 tests) 9ms
+ ✓ |adapter| clis/boss/auth.test.js (1 test) 4ms
+ ✓ |adapter| clis/twitter/search.test.js (37 tests) 12ms
+ ✓ |adapter| clis/reddit/whoami.test.js (7 tests) 7ms
+ ✓ |adapter| clis/linkedin-learning/course.test.js (15 tests) 6ms
+ ✓ |adapter| clis/notebooklm/compat.test.js (3 tests) 3ms
+ ✓ |adapter| clis/linkedin-learning/search.test.js (15 tests) 10ms
+ ✓ |adapter| clis/apple-podcasts/commands.test.js (5 tests) 9ms
+ ✓ |adapter| clis/bilibili/utils.test.js (15 tests) 7ms
+ ✓ |adapter| clis/weread/book-search.test.js (10 tests) 7ms
+ ✓ |adapter| clis/douyin/search.test.js (39 tests) 12ms
+ ✓ |adapter| clis/linkedin/thread-snapshot.test.js (9 tests) 11ms
+ ✓ |adapter| clis/chess/game.test.js (11 tests) 9ms
+ ✓ |adapter| clis/reddit/home.test.js (13 tests) 8ms
+ ✓ |adapter| clis/bilibili/summary.test.js (16 tests) 10ms
+ ✓ |adapter| clis/antigravity/antigravity.test.js (10 tests) 8ms
+ ✓ |adapter| clis/pinterest/download.test.js (5 tests) 9ms
+ ✓ |adapter| clis/pinterest/pin-update.test.js (10 tests) 7ms
+ ✓ |adapter| clis/weibo/delete.test.js (11 tests) 8ms
+ ✓ |adapter| clis/xiaoyuzhou/history.test.js (24 tests) 11ms
+ ✓ |adapter| clis/wechat-channels/publish.test.js (12 tests) 10ms
+ ✓ |adapter| clis/bilibili/comment.test.js (12 tests) 9ms
+ ✓ |adapter| clis/twitter/follow-batch.test.js (9 tests) 8ms
+ ✓ |adapter| clis/geogebra/geogebra.test.js (18 tests) 10ms
+ ✓ |adapter| clis/weread/utils.test.js (13 tests) 8ms
+ ✓ |adapter| clis/xianyu/item.test.js (6 tests) 7ms
+ ✓ |adapter| clis/chess/utils.test.js (22 tests) 7ms
+ ✓ |adapter| clis/slock/attachment-download.test.js (5 tests) 6ms
+ ✓ |adapter| clis/bilibili/download.test.js (11 tests) 9ms
+ ✓ |adapter| clis/pixiv/search.test.js (5 tests) 6ms
+ ✓ |adapter| clis/reddit/subscribed.test.js (13 tests) 9ms
+ ✓ |adapter| clis/twitter/list-batch.test.js (7 tests) 8ms
+ ✓ |adapter| clis/zlibrary/commands.test.js (6 tests) 5ms
+ ✓ |adapter| clis/pinterest/board-delete.test.js (6 tests) 7ms
+ ✓ |adapter| clis/amazon/search.test.js (1 test) 4ms
+ ✓ |adapter| clis/linkedin/profile-projects.test.js (6 tests) 6ms
+ ✓ |adapter| clis/chess/games.test.js (10 tests) 8ms
+ ✓ |adapter| clis/bilibili/comments.test.js (17 tests) 11ms
+ ✓ |adapter| clis/pinterest/save.test.js (13 tests) 11ms
+ ✓ |adapter| clis/suno/commands.test.js (12 tests) 6ms
+ ✓ |adapter| clis/xiaohongshu/saved.test.js (8 tests) 9ms
+ ✓ |adapter| clis/pinterest/pin.test.js (6 tests) 8ms
+ ✓ |adapter| clis/slock/error-detail-canary.test.js (4 tests) 11ms
+ ✓ |adapter| clis/douban/download.test.js (3 tests) 5ms
+ ✓ |adapter| clis/coupang/coupang.test.js (21 tests) 7ms
+ ✓ |adapter| clis/douyin/stats.test.js (9 tests) 5ms
+ ✓ |adapter| clis/weibo/publish.test.js (8 tests) 7ms
+ ✓ |adapter| clis/barchart/greeks.test.js (6 tests) 9ms
+ ✓ |adapter| clis/pinterest/board-section-delete.test.js (11 tests) 9ms
+ ✓ |adapter| clis/wikipedia/trending.test.js (3 tests) 5ms
+ ✓ |adapter| clis/xiaohongshu/drafts.test.js (11 tests) 9ms
+ ✓ |adapter| clis/twitter/followers.test.js (18 tests) 8ms
+ ✓ |adapter| clis/google-scholar/profile.test.js (4 tests) 6ms
+ ✓ |adapter| clis/zhihu/question.test.js (13 tests) 9ms
+ ✓ |adapter| clis/xiaohongshu/risk-control.test.js (9 tests) 9ms
+ ✓ |adapter| clis/linkedin/profile-experience.test.js (8 tests) 7ms
+ ✓ |adapter| clis/chatgpt/image.test.js (10 tests) 8ms
+ ✓ |adapter| clis/zhihu/collection.test.js (14 tests) 13ms
+ ✓ |adapter| clis/ths/hot-rank.test.js (8 tests) 8ms
+ ✓ |adapter| clis/jianyu/search.test.js (16 tests) 7ms
+ ✓ |adapter| clis/gemini/deep-research-result.test.js (14 tests) 8ms
+ ✓ |adapter| clis/slock/message-read.test.js (8 tests) 7ms
+ ✓ |adapter| clis/pixiv/download.test.js (9 tests) 10ms
+ ✓ |adapter| clis/linkedin/salesnav-inbox.test.js (6 tests) 6ms
+ ✓ |adapter| clis/amazon/shared.test.js (9 tests) 8ms
+ ✓ |adapter| clis/pinterest/search-pins.test.js (9 tests) 10ms
+ ✓ |adapter| clis/twitter/follow.test.js (3 tests) 4ms
+ ✓ |adapter| clis/pixiv/novels.test.js (8 tests) 6ms
+ ✓ |adapter| clis/gemini/deep-research.test.js (12 tests) 10ms
+ ✓ |adapter| clis/twitter/lists.test.js (11 tests) 9ms
+ ✓ |adapter| clis/xianyu/search.test.js (17 tests) 14ms
+ ✓ |adapter| clis/slock/task-convert.test.js (6 tests) 7ms
+ ✓ |adapter| clis/autohome/autohome.test.js (11 tests) 8ms
+ ✓ |adapter| clis/guazi/guazi.test.js (10 tests) 9ms
+ ✓ |adapter| clis/twitter/profile.test.js (12 tests) 13ms
+ ✓ |adapter| clis/linkedin/profile-read.test.js (5 tests) 5ms
+ ✓ |adapter| clis/slock/task-get.test.js (4 tests) 6ms
+ ✓ |adapter| clis/zhihu/recommend.test.js (7 tests) 6ms
+ ✓ |adapter| clis/pinterest/user-boards.test.js (6 tests) 7ms
+ ✓ |adapter| clis/linkedin-learning/shared.test.js (7 tests) 6ms
+ ✓ |adapter| clis/slock/task-claim.test.js (8 tests) 6ms
+ ✓ |adapter| clis/pinterest/pin-delete.test.js (5 tests) 5ms
+ ✓ |adapter| clis/bilibili/creator-stats.test.js (9 tests) 8ms
+ ✓ |adapter| clis/twitter/unbookmark.test.js (4 tests) 6ms
+ ✓ |adapter| clis/pixiv/user.test.js (9 tests) 8ms
+ ✓ |adapter| clis/arxiv/arxiv.test.js (6 tests) 5ms
+ ✓ |adapter| clis/flomo/memos.test.js (9 tests) 10ms
+ ✓ |adapter| clis/deepseek/send.test.js (8 tests) 7ms
+ ✓ |adapter| clis/chess/stats.test.js (8 tests) 7ms
+ ✓ |adapter| clis/xueqiu/utils.test.js (12 tests) 4ms
+ ✓ |adapter| clis/youtube/transcript-group.test.js (9 tests) 5ms
+ ✓ |adapter| clis/boss/search.test.js (9 tests) 5ms
+ ✓ |adapter| clis/bilibili/subtitle.test.js (16 tests) 6ms
+ ✓ |adapter| clis/jianyu/shared/procurement-detail.test.js (4 tests) 6ms
+ ✓ |adapter| clis/pinterest/user.test.js (5 tests) 7ms
+ ✓ |adapter| clis/amazon/product.test.js (1 test) 4ms
+ ✓ |adapter| clis/douyin/user-videos.test.js (9 tests) 10ms
+ ✓ |adapter| clis/deepseek/detail.test.js (5 tests) 5ms
+ ✓ |adapter| clis/jd/commands.test.js (3 tests) 8ms
+ ✓ |adapter| clis/twitter/list-remove.test.js (7 tests) 12913ms
+     ✓ does not treat post-delete fetch failure as successful member_count decrease  4302ms
+     ✓ does not treat malformed post-delete payload as successful member_count decrease  4302ms
+     ✓ does not treat a missing target list in post-delete payload as success  4302ms
+ ✓ |adapter| clis/pixiv/me.test.js (8 tests) 9ms
+ ✓ |adapter| clis/pixiv/detail.test.js (8 tests) 6ms
+ ✓ |adapter| clis/twitter/article.test.js (8 tests) 8ms
+ ✓ |adapter| clis/pixiv/novel.test.js (5 tests) 7ms
+ ✓ |adapter| clis/douyin/_shared/tos-upload-short-read.test.js (2 tests) 7ms
+ ✓ |adapter| clis/linkedin/connections.test.js (12 tests) 8ms
+ ✓ |adapter| clis/youtube/transcript.test.js (17 tests) 10ms
+ ✓ |adapter| clis/bloomberg/businessweek.test.js (7 tests) 8ms
+ ✓ |adapter| clis/slock/task-delete.test.js (5 tests) 6ms
+ ✓ |adapter| clis/pinterest/board-pins.test.js (6 tests) 8ms
+ ✓ |adapter| clis/slock/task-list.test.js (6 tests) 6ms
+ ✓ |adapter| clis/linux-do/feed.test.js (7 tests) 7ms
+ ✓ |adapter| clis/pinterest/board-create.test.js (6 tests) 5ms
+ ✓ |adapter| clis/slock/unread-summary.test.js (3 tests) 6ms
+ ✓ |adapter| clis/weibo/favorites.test.js (6 tests) 8ms
+ ✓ |adapter| clis/slock/api-base-canary.test.js (2 tests) 6ms
+ ✓ |adapter| clis/twitter/list-create.test.js (13 tests) 9ms
+ ✓ |adapter| clis/1688/search.test.js (4 tests) 8ms
+ ✓ |adapter| clis/jike/read.test.js (5 tests) 5ms
+ ✓ |adapter| clis/slock/channel-mark.test.js (5 tests) 5ms
+ ✓ |adapter| clis/linkedin/profile-analytics.test.js (6 tests) 10ms
+ ✓ |adapter| clis/xiaohongshu/user.test.js (15 tests) 10ms
+ ✓ |adapter| clis/linkedin/salesnav-thread.test.js (5 tests) 7ms
+ ✓ |adapter| clis/gemini/image.test.js (5 tests) 5ms
+ ✓ |adapter| clis/twitter/bookmark-folders.test.js (9 tests) 7ms
+ ✓ |adapter| clis/1688/shared.test.js (4 tests) 5ms
+ ✓ |adapter| clis/linkedin/safe-send.test.js (10 tests) 9ms
+ ✓ |adapter| clis/twitter/unretweet.test.js (4 tests) 6ms
+ ✓ |adapter| clis/xiaohongshu/collection-helpers.test.js (8 tests) 5ms
+ ✓ |adapter| clis/pinterest/board-sections.test.js (5 tests) 7ms
+ ✓ |adapter| clis/zhihu/search.test.js (9 tests) 9ms
+ ✓ |adapter| clis/zhihu/user-articles.test.js (5 tests) 5ms
+ ✓ |adapter| clis/linkedin/inbox.test.js (9 tests) 9ms
+ ✓ |adapter| clis/xiaohongshu/user-helpers.test.js (13 tests) 5ms
+ ✓ |adapter| clis/pixiv/illusts.test.js (6 tests) 8ms
+ ✓ |adapter| clis/linkedin/posts.test.js (4 tests) 6ms
+ ✓ |adapter| clis/1688/store.test.js (2 tests) 7ms
+ ✓ |adapter| clis/coupang/utils.test.js (6 tests) 6ms
+ ✓ |adapter| clis/deepseek/usage.test.js (4 tests) 6ms
+ ✓ |adapter| clis/slock/task-unclaim.test.js (5 tests) 6ms
+ ✓ |adapter| clis/slock/channel-action.test.js (7 tests) 11ms
+ ✓ |adapter| clis/weibo/auth.test.js (12 tests) 8ms
+ ✓ |adapter| clis/powerchina/search.test.js (9 tests) 6ms
+ ✓ |adapter| clis/xiaohongshu/feed.test.js (13 tests) 6ms
+ ✓ |adapter| clis/reddit/reply.test.js (6 tests) 8ms
+ ✓ |adapter| clis/xiaoyuzhou/transcript.test.js (5 tests) 15ms
+ ✓ |adapter| clis/douyin/_shared/transcode.test.js (4 tests) 6ms
+ ✓ |adapter| clis/instagram/note.test.js (5 tests) 9ms
+ ✓ |adapter| clis/notebooklm/write-note.test.js (10 tests) 6ms
+ ✓ |adapter| clis/slock/resolve.test.js (15 tests) 7ms
+ ✓ |adapter| clis/twitter/bookmark.test.js (4 tests) 10ms
+ ✓ |adapter| clis/imdb/utils.test.js (13 tests) 8ms
+ ✓ |adapter| clis/_shared/site-auth.test.js (4 tests) 8ms
+ ✓ |adapter| clis/zhihu/follow.test.js (4 tests) 6ms
+ ✓ |adapter| clis/slock/short-id-canary.test.js (3 tests) 6ms
+ ✓ |adapter| clis/suno/utils.test.js (37 tests) 9ms
+ ✓ |adapter| clis/twitter/unlike.test.js (4 tests) 6ms
+ ✓ |adapter| clis/slock/server-use.test.js (4 tests) 5ms
+ ✓ |adapter| clis/bloomberg/utils.test.js (3 tests) 7ms
+ ✓ |adapter| clis/google-scholar/search.test.js (6 tests) 6ms
+ ✓ |adapter| clis/facebook/marketplace.test.js (5 tests) 6ms
+ ✓ |adapter| clis/notebooklm/open.test.js (2 tests) 5ms
+ ✓ |adapter| clis/jike/auth-read.test.js (11 tests) 9ms
+ ✓ |adapter| clis/apple-podcasts/utils.test.js (12 tests) 6ms
+ ✓ |adapter| clis/chaoxing/utils.test.js (7 tests) 6ms
+ ✓ |adapter| clis/1688/item.test.js (1 test) 6ms
+ ✓ |adapter| clis/51job/utils.test.js (5 tests) 4ms
+ ✓ |adapter| clis/gov-law/commands.test.js (3 tests) 5ms
+ ✓ |adapter| clis/notebooklm/generate-audio.test.js (7 tests) 4ms
+ ✓ |adapter| clis/slock/reaction-remove.test.js (2 tests) 24ms
+ ✓ |adapter| clis/slock/bookmark-list.test.js (4 tests) 6ms
+ ✓ |adapter| clis/zhihu/collections.test.js (8 tests) 5ms
+ ✓ |adapter| clis/midjourney/capabilities.test.js (4 tests) 7ms
+ ✓ |adapter| clis/youtube/utils.test.js (7 tests) 4ms
+ ✓ |adapter| clis/slock/task-create.test.js (6 tests) 7ms
+ ✓ |adapter| clis/taobao/commands.test.js (3 tests) 10ms
+ ✓ |adapter| clis/slock/attachment-url.test.js (3 tests) 6ms
+ ✓ |adapter| clis/pinterest/user-pins.test.js (8 tests) 9ms
+ ✓ |adapter| clis/zsxq/topic.test.js (1 test) 6ms
+ ✓ |adapter| clis/twitter/unfollow.test.js (3 tests) 7ms
+ ✓ |adapter| clis/slock/task-status.test.js (7 tests) 8ms
+ ✓ |adapter| clis/zhihu/user.test.js (6 tests) 12ms
+ ✓ |adapter| clis/instagram/_shared/runtime-info.test.js (4 tests) 5ms
+ ✓ |adapter| clis/slock/channel-files.test.js (3 tests) 6ms
+ ✓ |adapter| clis/eastmoney/hot-rank.test.js (4 tests) 7ms
+ ✓ |adapter| clis/producthunt/utils.test.js (7 tests) 7ms
+ ✓ |adapter| clis/notebooklm/list.test.js (5 tests) 6ms
+ ✓ |adapter| clis/amazon/offer.test.js (3 tests) 6ms
+ ✓ |adapter| clis/zhihu/like.test.js (4 tests) 6ms
+ ✓ |adapter| clis/zhihu/user-answers.test.js (8 tests) 8ms
+ ✓ |adapter| clis/zhihu/pins.test.js (5 tests) 5ms
+ ✓ |adapter| clis/twitter/list-delete.test.js (4 tests) 6ms
+ ✓ |adapter| clis/zhihu/comment.test.js (4 tests) 6ms
+ ✓ |adapter| clis/slock/thread-state.test.js (6 tests) 6ms
+ ✓ |adapter| clis/slock/thread-list.test.js (2 tests) 5ms
+ ✓ |adapter| clis/linkedin-learning/trending.test.js (11 tests) 6ms
+ ✓ |adapter| clis/zhihu/followers.test.js (4 tests) 25ms
+ ✓ |adapter| clis/amazon/rankings.test.js (2 tests) 6ms
+ ✓ |adapter| clis/weread/ai-outline.test.js (3 tests) 5ms
+ ✓ |adapter| clis/linkedin/job-detail.test.js (5 tests) 4ms
+ ✓ |adapter| clis/youtube/channel.test.js (11 tests) 6ms
+ ✓ |adapter| clis/xiaohongshu/creator-notes.test.js (10 tests) 8ms
+ ✓ |adapter| clis/slock/dm-list.test.js (2 tests) 4ms
+ ✓ |adapter| clis/brave/search.test.js (7 tests) 8ms
+ ✓ |adapter| clis/sinafinance/stock.test.js (2 tests) 4ms
+ ✓ |adapter| clis/slock/thread-follow.test.js (3 tests) 6ms
+ ✓ |adapter| clis/chatgpt/envelope.test.js (14 tests) 6ms
+ ✓ |adapter| clis/instagram/_shared/navigation.test.js (3 tests) 5ms
+ ✓ |adapter| clis/jianyu/shared/procurement-contract.test.js (5 tests) 16ms
+ ✓ |adapter| clis/slock/channel-create.test.js (4 tests) 9ms
+ ✓ |adapter| clis/linkedin/salesnav-search.test.js (6 tests) 6ms
+ ✓ |adapter| clis/zhihu/answer.test.js (4 tests) 6ms
+ ✓ |adapter| clis/linkedin/jobs-preferences.test.js (4 tests) 5ms
+ ✓ |adapter| clis/twitter/utils.test.js (24 tests) 6ms
+ ✓ |adapter| clis/grok/utils.test.js (17 tests) 7ms
+ ✓ |adapter| clis/notebooklm/notes-get.test.js (2 tests) 5ms
+ ✓ |adapter| clis/xiaohongshu/creator-notes-summary.test.js (3 tests) 6ms
+ ✓ |adapter| clis/slock/inbox.test.js (4 tests) 6ms
+ ✓ |adapter| clis/zhihu/following.test.js (4 tests) 5ms
+ ✓ |adapter| clis/duckduckgo/suggest.test.js (7 tests) 19ms
+ ✓ |adapter| clis/twitter/list-tweets.test.js (8 tests) 4ms
+ ✓ |adapter| clis/slock/task-list-server.test.js (4 tests) 6ms
+ ✓ |adapter| clis/slock/channel-list.test.js (3 tests) 5ms
+ ✓ |adapter| clis/tdx/hot-rank.test.js (4 tests) 5ms
+ ✓ |adapter| clis/twitter/timeline.test.js (4 tests) 5ms
+ ✓ |adapter| clis/douyin/_shared/text-extra.test.js (5 tests) 4ms
+ ✓ |adapter| clis/amazon/bestsellers.test.js (1 test) 5ms
+ ✓ |adapter| clis/xiaohongshu/liked.test.js (3 tests) 6ms
+ ✓ |adapter| clis/36kr/article.test.js (4 tests) 5ms
+ ✓ |adapter| clis/xiaoyuzhou/download.test.js (3 tests) 8ms
+ ✓ |adapter| clis/weibo/envelope.test.js (3 tests) 7ms
+ ✓ |adapter| clis/slock/message-search.test.js (6 tests) 8ms
+ ✓ |adapter| clis/weibo/utils.test.js (7 tests) 5ms
+ ✓ |adapter| clis/zhihu/answer-normalize.test.js (4 tests) 5ms
+ ✓ |adapter| clis/pinterest/search-boards.test.js (3 tests) 6ms
+ ✓ |adapter| clis/reddit/extract-media.test.js (8 tests) 5ms
+ ✓ |adapter| clis/quark/utils.test.js (6 tests) 6ms
+ ✓ |adapter| clis/substack/utils.test.js (2 tests) 5ms
+ ✓ |adapter| clis/xueqiu/danjuan-utils.test.js (3 tests) 7ms
+ ✓ |adapter| clis/xiaoyuzhou/podcast-episodes.test.js (2 tests) 7ms
+ ✓ |adapter| clis/douyin/activities.test.js (4 tests) 4ms
+ ✓ |adapter| clis/google-scholar/cite.test.js (4 tests) 4ms
+ ✓ |adapter| clis/gitee/search.test.js (2 tests) 5ms
+ ✓ |adapter| clis/xiaoyuzhou/utils.test.js (11 tests) 4ms
+ ✓ |adapter| clis/baidu-scholar/search.test.js (2 tests) 5ms
+ ✓ |adapter| clis/chatgpt-app/ax.test.js (15 tests) 11ms
+ ✓ |adapter| clis/hf/hf.test.js (1 test) 3ms
+ ✓ |adapter| clis/slock/reaction-add.test.js (3 tests) 5ms
+ ✓ |adapter| clis/douyin/collections.test.js (4 tests) 3ms
+ ✓ |adapter| clis/midjourney/adapter.test.js (3 tests) 4ms
+ ✓ |adapter| clis/sinafinance/rolling-news.test.js (5 tests) 7ms
+ ✓ |adapter| clis/slock/channel-info.test.js (2 tests) 5ms
+ ✓ |adapter| clis/zsxq/search.test.js (1 test) 6ms
+ ✓ |adapter| clis/hltv/hltv.test.js (6 tests) 8ms
+ ✓ |adapter| clis/youtube/feed.test.js (1 test) 5ms
+ ✓ |adapter| clis/zhihu/favorite.test.js (6 tests) 7ms
+ ✓ |adapter| clis/zsxq/topics.test.js (1 test) 6ms
+ ✓ |adapter| clis/linkedin/timeline.test.js (10 tests) 6ms
+ ✓ |adapter| clis/xiaohongshu/navigation.test.js (13 tests) 4ms
+ ✓ |adapter| clis/slock/inbox-read-all.test.js (1 test) 3ms
+ ✓ |adapter| clis/steam/steam.test.js (4 tests) 4ms
+ ✓ |adapter| clis/spotify/utils.test.js (5 tests) 6ms
+ ✓ |adapter| clis/linkedin/post-analytics.test.js (3 tests) 3ms
+ ✓ |adapter| clis/gmail/commands.test.js (1 test) 3ms
+ ✓ |adapter| clis/zhihu/answer-target.test.js (3 tests) 3ms
+ ✓ |adapter| clis/tieba/commands.test.js (4 tests) 8ms
+ ✓ |adapter| clis/36kr/news.test.js (3 tests) 5ms
+ ✓ |adapter| clis/claude/commands.test.js (7 tests) 5ms
+ ✓ |adapter| clis/zhihu/text.test.js (5 tests) 2ms
+ ✓ |adapter| clis/rednote/navigation.test.js (7 tests) 3ms
+ ✓ |adapter| clis/twitter/article-evaluate.test.js (1 test) 11ms
+ ✓ |adapter| clis/notebooklm/create.test.js (8 tests) 11ms
+ ✓ |adapter| clis/uiverse/_shared.test.js (6 tests) 5ms
+ ✓ |adapter| clis/boss/utils.test.js (8 tests) 5ms
+ ✓ |adapter| clis/douyin/_shared/sts2.test.js (2 tests) 4ms
+ ✓ |adapter| clis/google/utils.test.js (7 tests) 4ms
+ ✓ |adapter| clis/slock/bookmark-remove.test.js (2 tests) 4ms
+ ✓ |adapter| clis/notebooklm/source-get.test.js (2 tests) 4ms
+ ✓ |adapter| clis/chatgpt-app/commands.test.js (3 tests) 5ms
+ ✓ |adapter| clis/maimai/search-talents.test.js (2 tests) 6ms
+ ✓ |adapter| clis/lesswrong/frontpage.test.js (1 test) 4ms
+ ✓ |adapter| clis/twitter/thread.test.js (1 test) 7ms
+ ✓ |adapter| clis/slock/errors.test.js (5 tests) 5ms
+ ✓ |adapter| clis/notebooklm/note-list.test.js (1 test) 4ms
+ ✓ |adapter| clis/slock/channel-members.test.js (3 tests) 5ms
+ ✓ |adapter| clis/youtube/video.test.js (6 tests) 5ms
+ ✓ |adapter| clis/cnki/search.test.js (2 tests) 2ms
+ ✓ |adapter| clis/linux-do/auth.test.js (6 tests) 6ms
+ ✓ |adapter| clis/1688/download.test.js (1 test) 16ms
+ ✓ |adapter| clis/douyin/publish.test.js (3 tests) 4ms
+ ✓ |adapter| clis/linkedin/shared.test.js (9 tests) 6ms
+ ✓ |adapter| clis/bilibili/dynamic.test.js (2 tests) 3ms
+ ✓ |adapter| clis/twitter/trending.test.js (1 test) 3ms
+ ✓ |adapter| clis/bilibili/hot.test.js (1 test) 6ms
+ ✓ |adapter| clis/douyin/_shared/timing.test.js (7 tests) 5ms
+ ✓ |adapter| clis/douyin/profile.test.js (2 tests) 3ms
+ ✓ |adapter| clis/wanfang/search.test.js (2 tests) 5ms
+ ✓ |adapter| clis/douban/movie-hot.test.js (1 test) 3ms
+ ✓ |adapter| clis/zsxq/utils.test.js (2 tests) 3ms
+ ✓ |adapter| clis/douyin/update.test.js (1 test) 2ms
+ ✓ |adapter| clis/chatgpt/model.test.js (2 tests) 5ms
+ ✓ |adapter| clis/douyin/location.test.js (3 tests) 4ms
+ ✓ |adapter| clis/xiaohongshu/creator-stats.test.js (1 test) 4ms
+ ✓ |adapter| clis/reddit/hot.test.js (2 tests) 4ms
+ ✓ |adapter| clis/xiaohongshu/shared.test.js (5 tests) 3ms
+ ✓ |adapter| clis/reddit/popular.test.js (2 tests) 3ms
+ ✓ |adapter| clis/reddit/search.test.js (2 tests) 3ms
+ ✓ |adapter| clis/slock/cross-command.test.js (1 test) 7ms
+ ✓ |adapter| clis/slock/whoami.test.js (1 test) 3ms
+ ✓ |adapter| clis/slock/inbox-done.test.js (1 test) 4ms
+ ✓ |adapter| clis/notebooklm/history.test.js (1 test) 3ms
+ ✓ |adapter| clis/36kr/hot.test.js (3 tests) 4ms
+ ✓ |adapter| clis/douyin/_shared/creation-id.test.js (4 tests) 4ms
+ ✓ |adapter| clis/ones/worklog.test.js (1 test) 2ms
+ ✓ |adapter| clis/notebooklm/source-guide.test.js (2 tests) 4ms
+ ✓ |adapter| clis/notebooklm/summary.test.js (2 tests) 3ms
+ ✓ |adapter| clis/ones/task-helpers.test.js (2 tests) 2ms
+ ✓ |adapter| clis/yuanbao/new.test.js (1 test) 3ms
+ ✓ |adapter| clis/qwen/ask.test.js (2 tests) 2ms
+ ✓ |adapter| clis/reddit/frontpage.test.js (2 tests) 3ms
+ ✓ |adapter| clis/notebooklm/source-fulltext.test.js (2 tests) 4ms
+ ✓ |adapter| clis/doubao/detail.test.js (2 tests) 4ms
+ ✓ |adapter| clis/reddit/subreddit.test.js (2 tests) 2ms
+ ✓ |adapter| clis/douban/subject.test.js (1 test) 2ms
+ ✓ |adapter| clis/douban/search.test.js (1 test) 2ms
+ ✓ |adapter| clis/uiverse/navigation.test.js (2 tests) 2ms
+ ✓ |adapter| clis/douyin/drafts.test.js (1 test) 2ms
+ ✓ |adapter| clis/grok/ask.test.js (2 tests) 2ms
+
+ Test Files  640 passed (640)
+      Tests  7516 passed | 1 skipped (7517)
+   Start at  20:29:41
+   Duration  25.54s (transform 17.39s, setup 0ms, import 62.66s, tests 54.76s, environment 70ms)
+
+fork gate: full OK

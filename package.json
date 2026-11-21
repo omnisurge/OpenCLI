@@ -13,7 +13,8 @@
       "framework-diagnostics-redaction",
       "workflow-fork-guards",
       "fork-aware-update-notifier",
-      "embedded-runtime-contract"
+      "embedded-runtime-contract",
+      "runtime-core-profile"
     ]
   },
   "publishConfig": {
@@ -60,6 +61,9 @@
     "dev": "tsx src/main.ts",
     "dev:bun": "bun src/main.ts",
     "build": "npm run clean-dist && npm run build-manifest",
+    "build:runtime-core": "node scripts/build-runtime-core.mjs",
+    "check:runtime-core": "node scripts/check-runtime-core-boundary.mjs",
+    "pack:runtime-core": "node scripts/pack-runtime-core.mjs",
     "prebuild-manifest": "tsc --build && node -e \"require('fs').chmodSync('dist/src/main.js', 0o755)\"",
     "build-manifest": "tsx src/build-manifest.ts",
     "clean-dist": "node scripts/clean-dist.cjs",

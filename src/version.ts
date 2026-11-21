@@ -10,10 +10,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Dev: __dirname is src/ (one level to root).
 // Prod: __dirname is dist/src/ (two levels to root).
-let _pkgDir = path.resolve(__dirname, '..');
-if (!fs.existsSync(path.join(_pkgDir, 'package.json'))) {
-  _pkgDir = path.resolve(_pkgDir, '..');
-}
+// runtime-core profile: package.json is next to the compiled entry.
+const packageDirCandidates = [
+  __dirname,
+  path.resolve(__dirname, '..'),
+  path.resolve(__dirname, '../..'),
+];
+const _pkgDir = packageDirCandidates.find((dir) => fs.existsSync(path.join(dir, 'package.json'))) ?? packageDirCandidates[0];
 const pkgJsonPath = path.join(_pkgDir, 'package.json');
 
 interface PackageJsonShape {

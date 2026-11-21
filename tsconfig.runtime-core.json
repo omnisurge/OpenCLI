@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/runtime-core",
+    "rootDir": "src",
+    "declaration": false,
+    "incremental": false,
+    "types": ["node"]
+  },
+  "include": [
+    "src/runtime-core.ts",
+    "src/runtime-commander.ts",
+    "src/runtime-execution.ts",
+    "src/registry-api.ts"
+  ]
+}

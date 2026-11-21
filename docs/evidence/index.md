@@ -26,6 +26,7 @@
 | [2026-11-20-lockfile-reconcile.md](2026-11-20-lockfile-reconcile.md) | fork lockfile turndown/ws reconcile | 2026-11-20 |
 | [release-1.8.8-omnisurge.6.md](release-1.8.8-omnisurge.6.md) | 1.8.8-omnisurge.6 本地/私有发行包 | 2026-11-20 |
 | [2026-11-20-runtime-core-boundary-exploration.md](2026-11-20-runtime-core-boundary-exploration.md) | runtime core 与开发工具边界探查 | 2026-11-20 |
+| [2026-11-21-runtime-core-profile.md](2026-11-21-runtime-core-profile.md) | runtime-core profile 实现与 core + SCCS smoke | 2026-11-21 |
 
 ## 模板
 
