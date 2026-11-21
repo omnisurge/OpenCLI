@@ -68,6 +68,7 @@
 
 - 已修复治理审查 P1：clean core + SCCS 在 ADR 0003 read-only extra 契约下可运行（宿主 peer link）、onStartup、core pipeline 子集、未跟踪 node_modules symlink（提交前删除）、边界门禁扩展、standalone install/版本。
 - 已修复 runtime-core 审查 P1：standalone `--version` 0.0.0、profile package 缺 bin.opencli/opencliFork、profile 独立 lockfile；tgz 已携带 npm-shrinkwrap.json（解包后 npm ci 通过）。
+- 独立审查：governance-reviewer APPROVE；runtime-core-reviewer APPROVE（shrinkwrap 修复后）。
 - 仍需 owner 决策/后续工作：embedded-sccs product pack、可选 browser capability 正向验证、真实业务命令。
 
 ## 回退
