@@ -57,6 +57,10 @@ if (!fs.existsSync(path.join(outDir, 'package-lock.json'))) {
   console.error('runtime-core package is missing package-lock.json');
   process.exit(1);
 }
+if (!fs.existsSync(path.join(outDir, 'npm-shrinkwrap.json'))) {
+  console.error('runtime-core package is missing npm-shrinkwrap.json');
+  process.exit(1);
+}
 for (const dep of bannedSpecifiers) {
   if (pkg.dependencies && dep in pkg.dependencies) {
     console.error(`runtime-core package declares forbidden dependency: ${dep}`);

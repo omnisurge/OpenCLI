@@ -19,7 +19,8 @@
 - 修复 src/version.ts：profile package.json 位于 runtime-core.js 同目录时也能读到版本，standalone 安装不再返回 0.0.0。
 - 修复 src/runtime-core.ts list：按 registry value 去重，避免 aliases 造成重复行。
 - 新增 tsconfig.runtime-core.json、scripts/build-runtime-core.mjs、scripts/check-runtime-core-boundary.mjs、scripts/pack-runtime-core.mjs；package.json 增加 build:runtime-core、check:runtime-core、pack:runtime-core。
-- profile package.json 复制 opencliFork（根 package.json patches 登记 runtime-core-profile），并同时提供 bin.opencli 与 bin.opencli-core；新增 release/inputs/runtime-core/package-lock.json，构建时复制到 dist/runtime-core。
+- profile package.json 复制 opencliFork（根 package.json patches 登记 runtime-core-profile），并同时提供 bin.opencli 与 bin.opencli-core；新增 release/inputs/runtime-core/package-lock.json，构建时复制到 dist/runtime-core 并生成 npm-shrinkwrap.json（npm pack 会携带，保证 tgz 可 npm ci）。
+- 修改 .gitignore：增加 `!docs/evidence/*.log` 以纳入全量门禁原始日志；新增 release/inputs/runtime-core/SHA256SUMS。
 - 修改 src/execution.ts：抽出参数准备到 src/execution-core.ts（full 与 core 共用）；行为兼容由 full gate 验证。不修改 src/main.ts、src/cli.ts 和 product 仓；full 开发工具行为保持。
 
 ## 执行的门禁
@@ -30,10 +31,11 @@
 | npx vitest run src/runtime-core.test.ts | 通过 | 7 tests |
 | npm run ci:fork:full | 通过 | 640 test files，7,516 passed / 1 skipped；manifest 无漂移；原始日志见 `docs/evidence/2026-11-21-runtime-core-full-gate.log` |
 | npm run check:docs | 通过 | 256 docs、11 ADR、12 evidence；VitePress build complete |
-| npm run build:runtime-core | 通过 | 生成 dist/runtime-core，26 个 JS + package.json + package-lock.json（28 个文件） |
-| npm run check:runtime-core | 通过 | 26 个 JS 文件；依赖 commander、js-yaml、cli-table3；无 browser/download/turndown/ws/tests/manifest |
-| npm run pack:runtime-core | 通过 | 生成 dist/opencli-runtime-core-1.8.8-omnisurge.6.tgz；28.4 kB packed / 94.7 kB unpacked，27 entries；SHA256 3e6eeef802d7e575f4d590bc0f46e02061f42790e7ad08638b801310e3726a12 |
-| 独立 npm ci / npm install tgz | 通过 | 干净临时目录安装 11 packages；runtime-core --version = 1.8.8-omnisurge.6；bin.opencli/opencliFork 存在；release/inputs/runtime-core/package-lock.json SHA256 4e0b76c1d2d2b2b33108172ff31ba001b0e3053fc1c82d39e143a6599020512a |
+| npm run build:runtime-core | 通过 | 生成 dist/runtime-core，26 个 JS + package.json + package-lock.json + npm-shrinkwrap.json（29 个文件） |
+| npm run check:runtime-core | 通过 | 26 个 JS 文件；依赖 commander、js-yaml、cli-table3；无 browser/download/turndown/ws/tests/manifest；package-lock 与 npm-shrinkwrap 均存在 |
+| npm run pack:runtime-core | 通过 | 生成 dist/opencli-runtime-core-1.8.8-omnisurge.6.tgz；29.9 kB packed / 99.1 kB unpacked，28 entries；SHA256 2e5ed184b5c7789c0556a1f2a17c5fb9d333815863bc57df869880abe9192ec4 |
+| 独立 npm ci（解包 tgz 后） | 通过 | tarball 内含 npm-shrinkwrap.json；解包后 `npm ci --ignore-scripts` 安装 10 packages；runtime-core --version = 1.8.8-omnisurge.6；bin.opencli/opencliFork 存在 |
+| 独立 npm install tgz | 通过 | 干净临时目录安装 11 packages；runtime-core --version = 1.8.8-omnisurge.6；release/inputs/runtime-core/package-lock.json SHA256 4e0b76c1d2d2b2b33108172ff31ba001b0e3053fc1c82d39e143a6599020512a |
 
 ## 真实路径 spot check
 
@@ -49,7 +51,7 @@
 
 ## 体积观察
 
-- runtime-core dist：99,062 bytes（26 个 JS + package.json + package-lock.json）；du 约 164 KB（不含依赖）；npm pack 94.7 kB unpacked（27 entries，不含 package-lock）。
+- runtime-core dist：103,437 bytes（26 个 JS + package.json + package-lock.json + npm-shrinkwrap.json）；du 约 172 KB（不含依赖）；npm pack 99.1 kB unpacked（28 entries，含 npm-shrinkwrap，不含 package-lock）。
 - runtime-core 生产依赖：commander、js-yaml、cli-table3；du 约 1.3 MB（未压缩）。
 - 对比 .6 完整 host：dist/src 2,101,036 bytes（含测试），clis 10,972,004 bytes，browser 629,564 bytes，download 78,901 bytes。
 - core profile 不包含 clis/manifest/skills/scripts/tests/browser/download/turndown/ws；体积收益主要来自这些移除。

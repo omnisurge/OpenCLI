@@ -34,6 +34,12 @@ const profilePkg = {
 };
 fs.writeFileSync(path.join(outDir, 'package.json'), JSON.stringify(profilePkg, null, 2) + '\n');
 const profileLock = path.join(root, 'release', 'inputs', 'runtime-core', 'package-lock.json');
-if (fs.existsSync(profileLock)) fs.copyFileSync(profileLock, path.join(outDir, 'package-lock.json'));
+if (fs.existsSync(profileLock)) {
+  const lockText = fs.readFileSync(profileLock);
+  fs.writeFileSync(path.join(outDir, 'package-lock.json'), lockText);
+  // npm pack excludes package-lock.json from tarballs but includes npm-shrinkwrap.json.
+  // Keep both so the dist directory and the packaged artifact have a frozen install.
+  fs.writeFileSync(path.join(outDir, 'npm-shrinkwrap.json'), lockText);
+}
 fs.chmodSync(path.join(outDir, 'runtime-core.js'), 0o755);
 console.log(`runtime-core profile written to ${path.relative(root, outDir)}`);
