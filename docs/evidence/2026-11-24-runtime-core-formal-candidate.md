@@ -1,9 +1,9 @@
 # 2026-11-24 runtime core 正式候选收口
 
 目标/范围：把 `runtime-core-profile` 从 core + embedded-SCCS 的 staging 收口为 **独立版本号的 core-only 正式候选**；不改产品仓 tracked 文件，不安装全局、不推 tag、不碰 NAS/生产。
-分支与 commit：`runtime-core-profile`；core 版本分离提交 `0a7590fc`；本地 annotated tag `v1.8.8-omnisurge.8` 指向该 code commit（产品 HOST_COMMIT 对齐）；最终 docs/evidence HEAD 为提交后的 `master` 线提交。`.7` core 候选及其 tag 已作废/删除。
+分支与 commit：`runtime-core-profile`；core 版本分离提交 `0a7590fc`；本地 annotated tag `v1.8.8-omnisurge.8` 指向该 code commit（产品 HOST_COMMIT 对齐）；最终 docs/evidence HEAD 为本文件所在的 `runtime-core-profile` 提交；产品 pin 仍使用 code commit `0a7590fc`。`.7` core 候选及其 tag 已作废/删除。
 变更级别：C3
-ADR：ADR 0013（core 版本分离，Proposed）；ADR 0012 已标 Superseded。
+ADR：ADR 0013（core 版本分离，Accepted）；ADR 0012 已标 Superseded。
 
 ## 变更清单
 
@@ -97,4 +97,4 @@ exit 69, BROWSER_CAPABILITY_UNAVAILABLE
 
 ## 结论
 
-**候选状态，不是发布。** core tarball 和 staging pack 可交付；正式产品接入仍以产品侧应用 diff、真实 SCCS 验收和 core-reviewer 复核为前提。
+**正式候选（core-only .8），不是发布。** core-reviewer 已 PASS；产品接入仍以产品侧应用 diff、产品测试和真实 SCCS 验收为前提。
