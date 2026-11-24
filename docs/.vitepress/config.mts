@@ -214,6 +214,7 @@ export default defineConfig({
                 { text: 'ADR 0010 — Runtime core / dev tool boundary', link: '/adr/0010-runtime-core-dev-tool-boundary' },
                 { text: 'ADR 0011 — Runtime core package profile', link: '/adr/0011-runtime-core-package-profile' },
                 { text: 'ADR 0012 — Core-only candidate 1.8.8-omnisurge.7', link: '/adr/0012-core-only-candidate' },
+                { text: 'ADR 0013 — Core version separation', link: '/adr/0013-core-version-separation' },
               ],
             },
           ],

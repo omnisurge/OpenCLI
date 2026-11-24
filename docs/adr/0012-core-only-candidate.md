@@ -1,7 +1,7 @@
 # ADR 0012：1.8.8-omnisurge.7 core-only 候选发布
 
-- 状态：Proposed（2026-11-24，依据所有者要求确认 core-only 正式候选）
-- 关联：ADR 0003（embedded runtime contract）、ADR 0004（embedded host delivery）、ADR 0010（runtime core/dev-tool boundary）、ADR 0011（runtime core package profile）
+- 状态：Superseded（2026-11-24；由 ADR 0013 取代，`.7` core 版本作废）
+- 关联：ADR 0003（embedded runtime contract）、ADR 0004（embedded host delivery）、ADR 0010（runtime core/dev-tool boundary）、ADR 0011（runtime core package profile）、ADR 0013（core 版本分离）
 - 变更级别：C3
 
 ## 背景
@@ -39,3 +39,4 @@
 
 - 2026-11-24：Proposed；所有者要求确认 core-only 正式候选，定义 `.7` 版本、engines、coreProfile、边界、staging 验证和产品切换闸门。
 - 2026-11-24：事实性修订：core tarball 只含 `npm-shrinkwrap.json`（`package-lock.json` 仅在构建目录）；实际工作分支为 `runtime-core-profile`，基于 `release/1.8.8-omnisurge.2`，尚未合并。
+- 2026-11-24：由 ADR 0013 取代；`.7` 与完整 host 同版本，core 正式版本改为 `.8`，旧 tag/tarball 作废。

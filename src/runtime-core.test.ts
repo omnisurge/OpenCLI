@@ -105,4 +105,32 @@ describe('runtime core execution', () => {
       getRegistry().delete(`${site}/status`);
     }
   });
+
+  it('does not inject the --json shortcut when the command declares a json argument', async () => {
+    const { Command } = await import('commander');
+    const { getRegistry } = await import('./registry.js');
+    const { registerRuntimeCommands } = await import('./runtime-commander.js');
+    const site = 'demo-json-arg-test';
+    getRegistry().set(
+      `${site}/dump`,
+      command({
+        site,
+        name: 'dump',
+        args: [{ name: 'json', type: 'boolean' }],
+        func: async (kwargs: Record<string, unknown>) => ({ json: kwargs.json }),
+        defaultFormat: 'json',
+      }),
+    );
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    try {
+      const program = new Command('opencli');
+      registerRuntimeCommands(program, new Map());
+      await program.parseAsync(['node', 'opencli', site, 'dump', '--json']);
+      const written = logSpy.mock.calls.map((c) => String(c[0])).join('\n');
+      expect(JSON.parse(written)).toEqual({ json: true });
+    } finally {
+      logSpy.mockRestore();
+      getRegistry().delete(`${site}/dump`);
+    }
+  });
 });

@@ -39,8 +39,9 @@
 | [0009](0009-release-omnisurge-6.md) | 发布 1.8.8-omnisurge.6 | Implemented |
 | [0010](0010-runtime-core-dev-tool-boundary.md) | Runtime core 与开发工具共享同一执行内核 | Proposed |
 | [0011](0011-runtime-core-package-profile.md) | Runtime core 的发行 profile 与包边界 | Proposed |
-| [0012](0012-core-only-candidate.md) | 1.8.8-omnisurge.7 core-only 候选发布 | Proposed |
+| [0012](0012-core-only-candidate.md) | 1.8.8-omnisurge.7 core-only 候选发布 | Superseded |
+| [0013](0013-core-version-separation.md) | core-only 正式版本与完整 host 版本分离 | Proposed |
 
 ## 当前最大编号
 
-本仓当前最大编号是 `0012`。新增决策从 `0013` 开始。
+本仓当前最大编号是 `0013`。新增决策从 `0014` 开始。
