@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CORE_VERSION } from './runtime-core-version.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(root, 'dist', 'runtime-core');
@@ -53,7 +54,15 @@ if (pkg.bin?.opencli !== 'runtime-core.js' || !pkg.opencliFork) {
   console.error('runtime-core package is missing bin.opencli or opencliFork metadata');
   process.exit(1);
 }
+if (pkg.version !== CORE_VERSION) {
+  console.error(`runtime-core version must be ${CORE_VERSION} (got ${pkg.version})`);
+  process.exit(1);
+}
 const rootPkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+if (pkg.version === rootPkg.version) {
+  console.error('runtime-core version must not equal the full-host root package version');
+  process.exit(1);
+}
 const expectedEngine = rootPkg.engines?.node;
 if (!expectedEngine || pkg.engines?.node !== expectedEngine) {
   console.error(`runtime-core engines.node must match root package (${expectedEngine ?? 'missing'})`);

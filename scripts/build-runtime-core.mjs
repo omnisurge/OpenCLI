@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CORE_VERSION } from './runtime-core-version.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(root, 'dist', 'runtime-core');
@@ -15,7 +16,7 @@ execFileSync(tsc, ['-p', 'tsconfig.runtime-core.json'], { cwd: root, stdio: 'inh
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const profilePkg = {
   name: '@jackwener/opencli',
-  version: pkg.version,
+  version: CORE_VERSION,
   private: true,
   engines: pkg.engines,
   type: 'module',
