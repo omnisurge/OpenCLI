@@ -26,10 +26,13 @@ ADR：ADR 0013（core 版本分离，Accepted）；ADR 0012 已标 Superseded。
 ## embedded-SCCS staging pack（产品脚本副本验证）
 
 - 路径：`.../.scratch/sccs-runtime-core-formal-20261124/product-root/release/dist/sccs-runtime-1.8.8-omnisurge.8.tgz`
-- SHA256：`784b31700a7d2195ce25d25f79c3817f47dd0c5b58ab054226dad2881127b40e`
-- bytes：`4,548,817`；entries：`4,670`（core 179，adapter 4,490）
+- SHA256：`663c19fc212a2598b1104e3fdd8a0ff17319d69ee47ea0deaa4eacae73621a6c`
+- bytes：`4,474,001`；entries：`4,665`（core 179，adapter 4,486）
 - 产品脚本副本：`product-root/release/pack-sccs-runtime.sh`；两次打包字节相同（`tar --format=ustar` + `gzip -n`，固定 mtime）。
-- 产品 diff 还包含 adapter package-lock peer `.8`、README/docs 的 `runtime-core.js` 路径；pack 脚本补 `opencli-host-release.json.commit`/`runtime-core-profile` patch 断言与 core `--version` smoke。
+- 2026-11-24 清理 staging 污染：作废 `784b3170...`（含 5 个 `.cache/`/`__pycache__/` 条目）；新包无 `.cache/`、`__pycache__/`、`*.pyc`，源目录无缓存/node_modules。payload 中保留的是适配器运行时依赖 `node_modules`，不是缓存。
+- 产品独立干净构建参考 `33c2536f...`（4,473,755 bytes）与当前隔离 worktree 产物 `6926d50b...` 均为排除前构建；新包与 `6926d50b...` 逐文件差异仅在 `payload/sccs-adapter/sccs/package.json`（新增 `files` 排除项），其余内容一致。
+- 最小 clean 修复：`.../.scratch/sccs-runtime-core-formal-20261124/sccs-clean-pack.patch`，只给 adapter `package.json.files` 增加四条排除；pack 脚本无需新增清理逻辑。
+- 产品 diff 还包含 adapter package-lock peer `.8`、README/docs 的 `runtime-core.js` 路径、`package.json.files` 缓存排除；pack 脚本补 `opencli-host-release.json.commit`/`runtime-core-profile` patch 断言与 core `--version` smoke。
 - core 断言：文件名、SHA256、entries=28、package version/main/bin/coreProfile；不复制完整 host `HOST_LOCKFILE`。
 - adapter 副本 pin：`1.8.8-omnisurge.8` / `0a7590fc...`；package peer/opencli-plugin/opencli-host-release/setup-check 同步；peer link 仍为 `../../../../opencli-runtime`。
 - 挂载环境：`OPENCLI_HOME=<private>`、`OPENCLI_EXTRA_CLIS_DIR=<payload>/sccs-adapter`、`OPENCLI_EMBEDDED=1`。
