@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -78,6 +79,22 @@ if (!fs.existsSync(path.join(outDir, 'package-lock.json'))) {
 }
 if (!fs.existsSync(path.join(outDir, 'npm-shrinkwrap.json'))) {
   console.error('runtime-core package is missing npm-shrinkwrap.json');
+  process.exit(1);
+}
+const frozenLock = path.join(root, 'release', 'inputs', 'runtime-core', 'package-lock.json');
+const frozenSums = path.join(root, 'release', 'inputs', 'runtime-core', 'SHA256SUMS');
+if (!fs.existsSync(frozenLock) || !fs.existsSync(frozenSums)) {
+  console.error('runtime-core frozen lock/SHA256SUMS missing');
+  process.exit(1);
+}
+const expectedLock = fs.readFileSync(frozenSums, 'utf8').trim().split(/\s+/)[0];
+const actualLock = crypto.createHash('sha256').update(fs.readFileSync(frozenLock)).digest('hex');
+if (expectedLock !== actualLock) {
+  console.error('runtime-core frozen package-lock.json fails SHA256SUMS');
+  process.exit(1);
+}
+if (!fs.readFileSync(path.join(outDir, 'package-lock.json')).equals(fs.readFileSync(frozenLock))) {
+  console.error('runtime-core built package-lock.json differs from frozen input');
   process.exit(1);
 }
 for (const dep of bannedSpecifiers) {

@@ -1,6 +1,6 @@
 # ADR 0013：core-only 正式版本与完整 host 版本分离
 
-- 状态：Proposed（2026-11-24，等待核心包与产品 staging 复核）
+- 状态：Accepted（2026-11-24；core-only `.8` 候选通过独立复核，产品接入待应用 diff）
 - 关联：ADR 0012（被本 ADR 取代）、ADR 0003、ADR 0004、ADR 0010、ADR 0011
 - 变更级别：C3
 

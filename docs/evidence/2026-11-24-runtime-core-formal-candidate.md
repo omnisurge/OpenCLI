@@ -26,9 +26,10 @@ ADR：ADR 0013（core 版本分离，Proposed）；ADR 0012 已标 Superseded。
 ## embedded-SCCS staging pack（产品脚本副本验证）
 
 - 路径：`.../.scratch/sccs-runtime-core-formal-20261124/product-root/release/dist/sccs-runtime-1.8.8-omnisurge.8.tgz`
-- SHA256：`04d28698d7eae49c608743340272a0331154842af0f3152db2be5258ad0b1299`
-- bytes：`4,548,825`；entries：`4,670`（core 179，adapter 4,490）
+- SHA256：`784b31700a7d2195ce25d25f79c3817f47dd0c5b58ab054226dad2881127b40e`
+- bytes：`4,548,817`；entries：`4,670`（core 179，adapter 4,490）
 - 产品脚本副本：`product-root/release/pack-sccs-runtime.sh`；两次打包字节相同（`tar --format=ustar` + `gzip -n`，固定 mtime）。
+- 产品 diff 还包含 adapter package-lock peer `.8`、README/docs 的 `runtime-core.js` 路径；pack 脚本补 `opencli-host-release.json.commit`/`runtime-core-profile` patch 断言与 core `--version` smoke。
 - core 断言：文件名、SHA256、entries=28、package version/main/bin/coreProfile；不复制完整 host `HOST_LOCKFILE`。
 - adapter 副本 pin：`1.8.8-omnisurge.8` / `0a7590fc...`；package peer/opencli-plugin/opencli-host-release/setup-check 同步；peer link 仍为 `../../../../opencli-runtime`。
 - 挂载环境：`OPENCLI_HOME=<private>`、`OPENCLI_EXTRA_CLIS_DIR=<payload>/sccs-adapter`、`OPENCLI_EMBEDDED=1`。
@@ -68,6 +69,16 @@ exit 69, BROWSER_CAPABILITY_UNAVAILABLE
 - 产品接受 `sccs login` / `sccs auth-export` 在 core-only 下不可用；业务登录路径使用 `sccs login-api`（`sccs-dsh-login` 走它）。
 - 不提供可选 browser capability：代价是把 browser/download 依赖树、Chromium/daemon 或平台 WebView 适配重新塞回 core，包体和攻击面回到完整 host；如产品确需这两条旧命令，另开 ADR，不在本候选暗含。
 - `sccs connect` 虽 `browser:false`，但真实连接依赖系统 WebView；本批只验证 `--help`，产品若使用需在目标 OS 另做真实连接验收。
+
+## 独立复核（core-reviewer）
+
+- 结论：**PASS（仅限 core-only `.8` 正式候选；不等于发布/上线）**。
+- 第 1 项 adapter pin：PASS（staging 已对齐、doctor 通过；产品 patch 已含 package-lock/README/docs 修正；产品 tracked 文件仍未改）。
+- 第 2 项 staging fail-open/复现：PASS（两次字节相同；无 `|| true`；`npm ci`、SHA、entries、identity fail-closed；残余收紧项已在 product handoff 标注）。
+- 第 3 项 `.7` 双字节：PASS（core `.8` 独立递增，boundary 拒绝同版本；完整 host `.7` 未构建/未发布）。
+- 第 4 项产品 pack 路径：PASS（staging 已验证；产品正式仓仍待应用 patch）。
+- 第 5 项 ADR：PASS（0012 Superseded；0013 复核后改 Accepted）。
+- 复核后仍需产品侧完成：应用 `product-core-only.patch`、跑产品测试、真实 SCCS 验收；这些不阻断 core 候选，但阻断产品发布。
 
 ## 未验边界与风险
 
