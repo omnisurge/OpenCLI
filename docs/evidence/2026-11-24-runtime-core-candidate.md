@@ -46,9 +46,8 @@
 本批没有改产品仓 tracked 文件；使用产品仓 `adapters/sccs` 和新的 staging 脚本：
 
 - 脚本：`/Users/panhaowei/Development/supervision-assistant/.scratch/sccs-runtime-core-20261124/pack-sccs-runtime-core.sh`
-- 产品包：`/Users/panhaowei/Development/supervision-assistant/.scratch/sccs-runtime-core-20261124/sccs-runtime-1.8.8-omnisurge.7.tgz`
-- SHA256：`2d86639e8e77c736cf335d4dd1b77d209c177c828ff1a5f0a8708fdb9cf1f14f`
-- 字节数：5,042,114；entries：4,670
+- 原始 adapter pin 包：`.../sccs-runtime-1.8.8-omnisurge.7.tgz`（SHA256 `2d86639e8e77c736cf335d4dd1b77d209c177c828ff1a5f0a8708fdb9cf1f14f`，5,042,114 bytes，4,670 entries；只证明加载，adapter doctor 仍因旧 pin 失败）
+- adapter pin 更新的 staging 候选：`.../sccs-runtime-1.8.8-omnisurge.7-pinned-candidate.tgz`（SHA256 `438e250ff64f60ac5fbf9956ac7fc2c1a85109c85fee7ca50ada8bc8f1af6b56`，5,042,329 bytes，4,670 entries；仅使用 adapter 副本，产品 source 未改）
 - 结构：`payload/opencli-runtime/` 来自 core tarball，`payload/sccs-adapter/sccs/` 来自产品 adapter；core 部分的顶层为 runtime JS、`node_modules`、`package.json`、`npm-shrinkwrap.json`，共 179 entries。
 - peer link：`payload/sccs-adapter/sccs/node_modules/@jackwener/opencli -> ../../../../opencli-runtime`，解析到同一 realpath。
 - mount：`OPENCLI_EXTRA_CLIS_DIR=<payload>/sccs-adapter`、`OPENCLI_HOME=<private home>/opencli`、`OPENCLI_EMBEDDED=1`。
@@ -72,7 +71,7 @@ sccs login                                 -> BROWSER_CAPABILITY_UNAVAILABLE, ex
 sccs auth-export                           -> BROWSER_CAPABILITY_UNAVAILABLE, exit 69
 ```
 
-产品 adapter 当前 `scripts/opencli-host-release.json` 仍 pin `.6`/`dffe8ba1`；用该原样 adapter 跑 `sccs-setup.mjs doctor --host-bin .../runtime-core.js --json` 返回 `host_requirement.matches=false`、exit 1。仅在临时 payload 副本把该文件改为 `.7`/`37830dc6` 并补 `runtime-core-profile` patch 后，doctor 返回 `ok=true`，`opencli_ok/plugin_ok/cli_ok/ready_for_cli/ready_for_agent=true`，`ready_for_business=false`（隔离 HOME 无登录，符合预期）。这说明产品 adapter 的 host pin 元数据必须先更新；本批没有改产品 source。
+产品 adapter 当前 `scripts/opencli-host-release.json` 仍 pin `.6`/`dffe8ba1`；用该原样 adapter 跑 `sccs-setup.mjs doctor --host-bin .../runtime-core.js --json` 返回 `host_requirement.matches=false`、exit 1。把 adapter 副本的 `opencli-host-release.json` 改为 `.7`/`3567fe8d` 并补 `runtime-core-profile`，同时把 package/opencli-plugin peer 与 setup-check 改为 `.7` 后，`sccs-runtime-1.8.8-omnisurge.7-pinned-candidate.tgz` 的 doctor 返回 `ok=true`，`opencli_ok/plugin_ok/cli_ok/ready_for_cli/ready_for_agent=true`，`ready_for_business=false`（隔离 HOME 无登录，符合预期）。这说明产品 adapter 的 host pin 元数据必须先更新；本批没有改产品 source。
 
 `sccs list` 不是实际命令；根命令 `list sccs` 才是发现入口。`sccs status` 的 `connected=false` 是隔离 HOME 无凭据的预期结果，不是登录失败；真实 `login-api`/业务命令未执行。
 
