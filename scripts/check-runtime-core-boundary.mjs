@@ -53,8 +53,14 @@ if (pkg.bin?.opencli !== 'runtime-core.js' || !pkg.opencliFork) {
   console.error('runtime-core package is missing bin.opencli or opencliFork metadata');
   process.exit(1);
 }
-if (pkg.engines?.node !== '>=20.18.1') {
-  console.error('runtime-core package must declare engines.node >=20.18.1');
+const rootPkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const expectedEngine = rootPkg.engines?.node;
+if (!expectedEngine || pkg.engines?.node !== expectedEngine) {
+  console.error(`runtime-core engines.node must match root package (${expectedEngine ?? 'missing'})`);
+  process.exit(1);
+}
+if (pkg.opencliFork?.coreProfile !== 'runtime-core') {
+  console.error('runtime-core package must mark opencliFork.coreProfile=runtime-core');
   process.exit(1);
 }
 if (!fs.existsSync(path.join(outDir, 'package-lock.json'))) {

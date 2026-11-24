@@ -21,7 +21,7 @@ const profilePkg = {
   type: 'module',
   main: 'runtime-core.js',
   bin: { opencli: 'runtime-core.js', 'opencli-core': 'runtime-core.js' },
-  opencliFork: pkg.opencliFork,
+  opencliFork: { ...pkg.opencliFork, coreProfile: 'runtime-core' },
   exports: {
     './registry': './registry-api.js',
     './errors': './errors.js',
