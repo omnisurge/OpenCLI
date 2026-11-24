@@ -27,6 +27,7 @@
 | [release-1.8.8-omnisurge.6.md](release-1.8.8-omnisurge.6.md) | 1.8.8-omnisurge.6 本地/私有发行包 | 2026-11-20 |
 | [2026-11-20-runtime-core-boundary-exploration.md](2026-11-20-runtime-core-boundary-exploration.md) | runtime core 与开发工具边界探查 | 2026-11-20 |
 | [2026-11-21-runtime-core-profile.md](2026-11-21-runtime-core-profile.md) | runtime-core profile 实现与 core + SCCS smoke | 2026-11-21 |
+| [2026-11-24-runtime-core-candidate.md](2026-11-24-runtime-core-candidate.md) | 1.8.8-omnisurge.7 core-only 候选、engines、重建与 embedded-sccs staging pack | 2026-11-24 |
 
 ## 模板
 
