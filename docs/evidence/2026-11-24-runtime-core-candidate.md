@@ -72,6 +72,8 @@ sccs login                                 -> BROWSER_CAPABILITY_UNAVAILABLE, ex
 sccs auth-export                           -> BROWSER_CAPABILITY_UNAVAILABLE, exit 69
 ```
 
+产品 adapter 当前 `scripts/opencli-host-release.json` 仍 pin `.6`/`dffe8ba1`；用该原样 adapter 跑 `sccs-setup.mjs doctor --host-bin .../runtime-core.js --json` 返回 `host_requirement.matches=false`、exit 1。仅在临时 payload 副本把该文件改为 `.7`/`37830dc6` 并补 `runtime-core-profile` patch 后，doctor 返回 `ok=true`，`opencli_ok/plugin_ok/cli_ok/ready_for_cli/ready_for_agent=true`，`ready_for_business=false`（隔离 HOME 无登录，符合预期）。这说明产品 adapter 的 host pin 元数据必须先更新；本批没有改产品 source。
+
 `sccs list` 不是实际命令；根命令 `list sccs` 才是发现入口。`sccs status` 的 `connected=false` 是隔离 HOME 无凭据的预期结果，不是登录失败；真实 `login-api`/业务命令未执行。
 
 ## 未验边界与风险
@@ -80,6 +82,7 @@ sccs auth-export                           -> BROWSER_CAPABILITY_UNAVAILABLE, ex
 - 只在 macOS arm64 + Node v24.14.0 实测；Node 20.18.1 最低版本、Windows/Linux 未验。
 - browser:true 的 `sccs login`/`sccs auth-export` 只验证了明确的 BROWSER_CAPABILITY_UNAVAILABLE 门禁；未提供可选 browser capability。
 - product `pack-sccs-runtime.sh` 未改；staging pack 未合并进产品发布流程，产品 `HOST_VERSION/HOST_COMMIT` 未改。
+- 产品 adapter 的 `opencli-host-release.json`、`opencli-plugin.json`、`package.json` peerDependencies 与 `setup-check.mjs` 仍含 `.6`/`.5` 旧 pin；未修改，正式 pack 前必须更新并重跑 doctor。
 - 独立审查未完成；ADR 0012 仍为 Proposed。
 - 未安装全局、未 npm 发布、未推标签、未替换生产 payload。
 
