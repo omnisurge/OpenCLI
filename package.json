@@ -1,6 +1,6 @@
 {
   "name": "@jackwener/opencli",
-  "version": "1.8.8-omnisurge.6",
+  "version": "1.8.8-omnisurge.7",
   "private": true,
   "opencliFork": {
     "distribution": "omnisurge",

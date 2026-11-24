@@ -83,4 +83,26 @@ describe('runtime core execution', () => {
     await emitHook('onStartup', { command: '__startup__', args: {} });
     expect(seen).toEqual(['startup']);
   });
+
+  it('supports --json shortcut on registered runtime subcommands', async () => {
+    const { Command } = await import('commander');
+    const { getRegistry } = await import('./registry.js');
+    const { registerRuntimeCommands } = await import('./runtime-commander.js');
+    const site = 'demo-json-test';
+    getRegistry().set(
+      `${site}/status`,
+      command({ site, name: 'status', args: [], func: async () => ({ ok: true }) }),
+    );
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    try {
+      const program = new Command('opencli');
+      registerRuntimeCommands(program, new Map());
+      await program.parseAsync(['node', 'opencli', site, 'status', '--json']);
+      const written = logSpy.mock.calls.map((c) => String(c[0])).join('\n');
+      expect(JSON.parse(written)).toEqual({ ok: true });
+    } finally {
+      logSpy.mockRestore();
+      getRegistry().delete(`${site}/status`);
+    }
+  });
 });

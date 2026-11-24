@@ -23,7 +23,7 @@ for (const file of bannedFiles) {
     process.exit(1);
   }
 }
-const bannedSpecifiers = ['turndown', '@mixmark-io/domino', '@mozilla/readability', 'ws'];
+const bannedSpecifiers = ['turndown', '@mixmark-io/domino', '@mozilla/readability', 'ws', 'undici'];
 const files = [];
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -51,6 +51,10 @@ if (files.some((file) => file.endsWith('.test.js'))) {
 const pkg = JSON.parse(fs.readFileSync(path.join(outDir, 'package.json'), 'utf8'));
 if (pkg.bin?.opencli !== 'runtime-core.js' || !pkg.opencliFork) {
   console.error('runtime-core package is missing bin.opencli or opencliFork metadata');
+  process.exit(1);
+}
+if (pkg.engines?.node !== '>=20.18.1') {
+  console.error('runtime-core package must declare engines.node >=20.18.1');
   process.exit(1);
 }
 if (!fs.existsSync(path.join(outDir, 'package-lock.json'))) {

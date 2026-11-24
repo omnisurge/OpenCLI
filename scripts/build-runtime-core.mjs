@@ -17,6 +17,7 @@ const profilePkg = {
   name: '@jackwener/opencli',
   version: pkg.version,
   private: true,
+  engines: pkg.engines,
   type: 'module',
   main: 'runtime-core.js',
   bin: { opencli: 'runtime-core.js', 'opencli-core': 'runtime-core.js' },

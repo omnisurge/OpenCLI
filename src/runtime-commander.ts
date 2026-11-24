@@ -41,10 +41,14 @@ function registerCommand(siteCmd: Command, cmd: CliCommand): void {
     else if (arg.default != null) subCmd.option(flag, arg.help ?? '', String(arg.default));
     else subCmd.option(flag, arg.help ?? '');
   }
+  const hasJsonArg = cmd.args.some((arg) => !arg.positional && arg.name === 'json');
   subCmd
     .option('-f, --format <fmt>', 'Output format: table, plain, json, yaml, md, csv', 'table')
     .option('--trace <mode>', 'Trace mode accepted for compatibility', 'off')
     .option('-v, --verbose', 'Debug output', false);
+  if (!hasJsonArg) {
+    subCmd.option('--json', 'Shortcut for --format json', false);
+  }
 
   subCmd.action(async (...actionArgs: unknown[]) => {
     const optionsRecord = (actionArgs[positionalArgs.length] ?? {}) as Record<string, unknown>;
@@ -60,8 +64,11 @@ function registerCommand(siteCmd: Command, cmd: CliCommand): void {
       if (value !== undefined) rawKwargs[arg.name] = value;
     }
     const verbose = optionsRecord.verbose === true;
-    let format = typeof optionsRecord.format === 'string' ? optionsRecord.format : 'table';
-    const formatExplicit = subCmd.getOptionValueSource('format') === 'cli';
+    const jsonShortcut = !hasJsonArg && optionsRecord.json === true;
+    let format = jsonShortcut
+      ? 'json'
+      : (typeof optionsRecord.format === 'string' ? optionsRecord.format : 'table');
+    const formatExplicit = jsonShortcut || subCmd.getOptionValueSource('format') === 'cli';
     if (verbose) process.env.OPENCLI_VERBOSE = '1';
     try {
       const result = await executeRuntimeCommand(cmd, rawKwargs, verbose, {
