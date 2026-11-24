@@ -1,7 +1,7 @@
 # 2026-11-24-runtime-core-0.7-candidate
 
 - 日期：2026-11-24
-- 分支与 commit：`release/1.8.8-omnisurge.2`；core 候选实现/ADR 提交 `d6f58c62`；本文件提交后形成最终候选 HEAD
+- 分支与 commit：工作分支 `runtime-core-profile`（基于 `release/1.8.8-omnisurge.2`）；core 候选实现/ADR 提交 `d6f58c62`，coreProfile 元数据提交 `0acd5637`；本文件提交后形成最终候选 HEAD
 - 变更级别：C3
 - ADR：[0012-core-only-candidate](../adr/0012-core-only-candidate.md)；关联 ADR 0003/0004/0010/0011
 - 目标 / 范围：确认 `1.8.8-omnisurge.7` core-only 候选；收口未提交的 core commander/boundary 修改；补 engines；重建 core tarball；做 embedded-sccs staging pack 与 SCCS smoke
@@ -32,10 +32,10 @@
 ## core 产物
 
 - 路径：`/Users/panhaowei/Development/OpenCLI/.agents/worktrees/runtime-core-profile/dist/opencli-runtime-core-1.8.8-omnisurge.7.tgz`
-- SHA256：`b6e99aeec0ac5d53d266d4c58ba4d2cb7ae7f91e4c720edfb92159564d2e5426`
-- 字节数：29,973
+- SHA256：`e05610973985b4a39e1415a163701165d2609aacf07f988f619af287665bf33c`
+- 字节数：29,982
 - entries：28（tarball 内 `package/…`）
-- package：`@jackwener/opencli@1.8.8-omnisurge.7`、private、`main=runtime-core.js`、`bin={opencli,opencli-core}`、`engines.node=>=20.18.1`
+- package：`@jackwener/opencli@1.8.8-omnisurge.7`、private、`main=runtime-core.js`、`bin={opencli,opencli-core}`、`engines.node=>=20.18.1`、`opencliFork.coreProfile=runtime-core`
 - 依赖：`commander ^14.0.3`、`js-yaml ^4.3.2`、`cli-table3 ^0.6.5`
 - lock：tarball 内含 `npm-shrinkwrap.json`；构建目录另有 `package-lock.json`；两者均来自冻结输入，`npm ci --omit=dev --ignore-scripts` 实测安装 10 packages。
 - 边界：core 内无 `clis/`、`browser/`、`download/`、`skills/`、`scripts/`、docs、tests、`cli-manifest.json`。
@@ -46,8 +46,8 @@
 本批没有改产品仓 tracked 文件；使用产品仓 `adapters/sccs` 和新的 staging 脚本：
 
 - 脚本：`/Users/panhaowei/Development/supervision-assistant/.scratch/sccs-runtime-core-20261124/pack-sccs-runtime-core.sh`
-- 原始 adapter pin 包：`.../sccs-runtime-1.8.8-omnisurge.7.tgz`（SHA256 `2d86639e8e77c736cf335d4dd1b77d209c177c828ff1a5f0a8708fdb9cf1f14f`，5,042,114 bytes，4,670 entries；只证明加载，adapter doctor 仍因旧 pin 失败）
-- adapter pin 更新的 staging 候选：`.../sccs-runtime-1.8.8-omnisurge.7-pinned-candidate.tgz`（SHA256 `438e250ff64f60ac5fbf9956ac7fc2c1a85109c85fee7ca50ada8bc8f1af6b56`，5,042,329 bytes，4,670 entries；仅使用 adapter 副本，产品 source 未改）
+- 旧 staging 包（core 尚未加 coreProfile，仅历史）：`.../sccs-runtime-1.8.8-omnisurge.7.tgz`（SHA256 `2d86639e8e77c736cf335d4dd1b77d209c177c828ff1a5f0a8708fdb9cf1f14f`，5,042,114 bytes，4,670 entries；adapter doctor 因旧 pin 失败）
+- 最终 staging 候选（fail-closed 脚本 + adapter pin 副本）：`.../sccs-runtime-1.8.8-omnisurge.7-pinned-candidate.tgz`（SHA256 `2a75120cd160047b3385d4bda2a73d3d71b64a3ae663badd7a32e53cf40dc497`，4,984,580 bytes，4,670 entries；adapter 副本 pin `.7`/`0acd5637`，doctor `ready_for_cli=true`）
 - 结构：`payload/opencli-runtime/` 来自 core tarball，`payload/sccs-adapter/sccs/` 来自产品 adapter；core 部分的顶层为 runtime JS、`node_modules`、`package.json`、`npm-shrinkwrap.json`，共 179 entries。
 - peer link：`payload/sccs-adapter/sccs/node_modules/@jackwener/opencli -> ../../../../opencli-runtime`，解析到同一 realpath。
 - mount：`OPENCLI_EXTRA_CLIS_DIR=<payload>/sccs-adapter`、`OPENCLI_HOME=<private home>/opencli`、`OPENCLI_EMBEDDED=1`。
@@ -71,9 +71,15 @@ sccs login                                 -> BROWSER_CAPABILITY_UNAVAILABLE, ex
 sccs auth-export                           -> BROWSER_CAPABILITY_UNAVAILABLE, exit 69
 ```
 
-产品 adapter 当前 `scripts/opencli-host-release.json` 仍 pin `.6`/`dffe8ba1`；用该原样 adapter 跑 `sccs-setup.mjs doctor --host-bin .../runtime-core.js --json` 返回 `host_requirement.matches=false`、exit 1。把 adapter 副本的 `opencli-host-release.json` 改为 `.7`/`3567fe8d` 并补 `runtime-core-profile`，同时把 package/opencli-plugin peer 与 setup-check 改为 `.7` 后，`sccs-runtime-1.8.8-omnisurge.7-pinned-candidate.tgz` 的 doctor 返回 `ok=true`，`opencli_ok/plugin_ok/cli_ok/ready_for_cli/ready_for_agent=true`，`ready_for_business=false`（隔离 HOME 无登录，符合预期）。这说明产品 adapter 的 host pin 元数据必须先更新；本批没有改产品 source。
+产品 adapter 当前 `scripts/opencli-host-release.json` 仍 pin `.6`/`dffe8ba1`；用该原样 adapter 跑 `sccs-setup.mjs doctor --host-bin .../runtime-core.js --json` 返回 `host_requirement.matches=false`、exit 1。把 adapter 副本的 `opencli-host-release.json` 改为 `.7`/`0acd5637` 并补 `runtime-core-profile`，同时把 package/opencli-plugin peer 与 setup-check 改为 `.7` 后，`sccs-runtime-1.8.8-omnisurge.7-pinned-candidate.tgz` 的 doctor 返回 `ok=true`，`opencli_ok/plugin_ok/cli_ok/ready_for_cli/ready_for_agent=true`，`ready_for_business=false`（隔离 HOME 无登录，符合预期）。这说明产品 adapter 的 host pin 元数据必须先更新；本批没有改产品 source。
 
 `sccs list` 不是实际命令；根命令 `list sccs` 才是发现入口。`sccs status` 的 `connected=false` 是隔离 HOME 无凭据的预期结果，不是登录失败；真实 `login-api`/业务命令未执行。
+
+## 独立审查
+
+- 2026-11-24 `core-reviewer`：**BLOCK**。核对了 core tarball SHA/内容/边界与 `--json`/engines 修改，但指出产品 adapter 仍 pin `.6`（原样 staging doctor exit 1）、staging 脚本 fail-open/不可复现、`.7` 同版本完整 host 与 core 双字节风险、产品 `pack-sccs-runtime.sh` 未适配 `runtime-core.js`、ADR 0012 的 package-lock/分支表述不一致。
+- 2026-11-24 `core-reviewer-fast`：**APPROVE**（仅 core 候选代码范围；明确产品 adapter pin 是正式产品门槛，不是本候选代码 blocker）。
+- 两个结论不一致，且 `core-reviewer` 的阻断项未全部处置；因此 ADR 0012 保持 Proposed，本批不能称为正式候选完成。
 
 ## 未验边界与风险
 
@@ -93,4 +99,4 @@ sccs auth-export                           -> BROWSER_CAPABILITY_UNAVAILABLE, ex
 
 ## 结论
 
-`.7` 的 core-only 包已在 clean commit 后重建，core + SCCS staging load/smoke 通过；但产品正式接入、真实 SCCS、浏览器能力和独立审查未完成，因此只能判定为 **部分完成（正式候选，不是发布）**，不能称为正式交付。
+`.7` 的 core-only 包已在 clean commit 后重建，core + SCCS staging load/smoke 通过；但产品正式接入、真实 SCCS、浏览器能力、独立审查仍有 BLOCK/未闭合项，因此只能判定为 **部分完成（正式候选，不是发布）**，不能称为正式交付。
