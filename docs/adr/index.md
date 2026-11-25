@@ -41,7 +41,8 @@
 | [0011](0011-runtime-core-package-profile.md) | Runtime core 的发行 profile 与包边界 | Proposed |
 | [0012](0012-core-only-candidate.md) | 1.8.8-omnisurge.7 core-only 候选发布 | Superseded |
 | [0013](0013-core-version-separation.md) | core-only 正式版本与完整 host 版本分离 | Accepted |
+| [0014](0014-omni-three-layer-product-boundary.md) | Omni 三层产品边界与下游外置 | Proposed |
 
 ## 当前最大编号
 
-本仓当前最大编号是 `0013`。新增决策从 `0014` 开始。
+本仓当前最大编号是 `0014`。新增决策从 `0015` 开始。

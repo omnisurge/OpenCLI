@@ -215,6 +215,7 @@ export default defineConfig({
                 { text: 'ADR 0011 — Runtime core package profile', link: '/adr/0011-runtime-core-package-profile' },
                 { text: 'ADR 0012 — Core-only candidate 1.8.8-omnisurge.7', link: '/adr/0012-core-only-candidate' },
                 { text: 'ADR 0013 — Core version separation', link: '/adr/0013-core-version-separation' },
+                { text: 'ADR 0014 — Omni three-layer product boundary', link: '/adr/0014-omni-three-layer-product-boundary' },
               ],
             },
           ],
