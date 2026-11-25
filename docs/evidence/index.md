@@ -29,6 +29,7 @@
 | [2026-11-21-runtime-core-profile.md](2026-11-21-runtime-core-profile.md) | runtime-core profile 实现与 core + SCCS smoke | 2026-11-21 |
 | [2026-11-24-runtime-core-candidate.md](2026-11-24-runtime-core-candidate.md) | 1.8.8-omnisurge.7 core-only 候选、engines、重建与 embedded-sccs staging pack（历史，已被 .8 取代） | 2026-11-24 |
 | [2026-11-24-runtime-core-formal-candidate.md](2026-11-24-runtime-core-formal-candidate.md) | 1.8.8-omnisurge.8 core-only 正式候选、版本分离、staging pack 与产品 diff | 2026-11-24 |
+| [release-1.8.8-omnisurge.8.md](release-1.8.8-omnisurge.8.md) | 1.8.8-omnisurge.8 core-only 发布、远端 tag/asset 核验 | 2026-11-25 |
 
 ## 模板
 
